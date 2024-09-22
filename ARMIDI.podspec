@@ -17,16 +17,16 @@ Pod::Spec.new do |spec|
     s.framework                 = 'CoreMIDI'
     
     subspec 'ARMIDIError' do |espec|
-        espec.source_files          = '/ARMIDIError/Sources/**/*'
+        espec.source_files          = '/ARMIDIError/Sources/'
     end
     
     subspec 'ARMIDIServices' do |sspec|'
-        sspec.source_files          = '/ARMIDIServices/Sources/**/*'
-        sspec.dependency            = 'ARMIDI/ARMIDIError'
+        sspec.source_files          = '/ARMIDIServices/Sources/'
+        sspec.dependency            = ARMIDI/ARMIDIError
     end
     
-    subspec 'ARMIDIServices+Protocols' do |spspec|
-        spspec.source_files         = '/ARMIDIServices+Protocols/Sources/**/*'
-        spspec.dependency           = '/ARMIDI/ARMIDIServices'
+    subspec 'ARMIDIServices-Protocols' do |spspec|
+        spspec.source_files         = '/ARMIDIServices-Protocols/Sources/'
+        spspec.dependency           = ARMIDI/ARMIDIServices
     end
 end

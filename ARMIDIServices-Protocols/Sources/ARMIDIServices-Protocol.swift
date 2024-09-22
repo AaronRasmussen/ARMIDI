@@ -1,6 +1,6 @@
 //
-//  ARMIDIServices+Protocols.swift
-//  ARMIDI/ARMIDIServices+Protocols/Sources/ARMIDIServices+Protocols.swift
+//  ARMIDIServices-Protocols.swift
+//  ARMIDI/ARMIDIServices-Protocols/Sources/ARMIDIServices+Protocols.swift
 //
 //  Created by Aaron Rasmussen on 9/20/24.
 //
