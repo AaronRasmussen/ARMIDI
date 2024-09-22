@@ -7,9 +7,11 @@
 
 import CoreMIDI
 
-public protocol ARMIDIPortType: ARMIDIObjectType {
+public protocol ARMIDIPortType {
     
-    func connectToSource(_ source: MIDIEndpointRef, context: UnsafeMutableRawPointer?) throws
+    var midiRef: MIDIPortRef { get }
+    
+    func connectToSource(_ source: MIDIEndpointRef, withContext context: UnsafeMutableRawPointer?) throws
     func disconnectFromSource(_ source: MIDIEndpointRef) throws
 }
 

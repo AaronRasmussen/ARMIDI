@@ -7,7 +7,9 @@
 
 import CoreMIDI
 
-public protocol ARMIDIClientType: ARMIDIObjectType {
+public protocol ARMIDIClientType {
+    
+    var midiRef: MIDIClientRef { get }
     
     func createInputPortNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, usingCallback callback: MIDIReadProc) throws -> MIDIEndpointRef
     func createInputPortNamed(_ name: String, usingBlock block: @escaping MIDIReadBlock) throws -> MIDIEndpointRef
@@ -17,7 +19,7 @@ public protocol ARMIDIClientType: ARMIDIObjectType {
     func createSourceNamed(_ name: String) throws -> MIDIEndpointRef
     @available(macOS 11.0, *)
     func createSourceNamed(_ name: String, usingProtocol midiProtocol: MIDIProtocolID) throws -> MIDIEndpointRef
-    func createDestinationNamed(_ name: String, withCallback callback: MIDIReadProc, context: UnsafeMutableRawPointer?) throws -> MIDIEndpointRef
+    func createDestinationNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, withCallback callback: MIDIReadProc) throws -> MIDIEndpointRef
     func createDestinationNamed(_ name: String, withBlock block: @escaping MIDIReadBlock) throws -> MIDIEndpointRef
     @available(macOS 11.0, *)
     func createDestinationNamed(_ name: String, usingProtocol midiProtocol: MIDIProtocolID, withBlock block: @escaping MIDIReceiveBlock) throws -> MIDIEndpointRef
