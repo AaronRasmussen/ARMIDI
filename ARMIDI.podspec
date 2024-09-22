@@ -29,4 +29,9 @@ Pod::Spec.new do |spec|
         spspec.source_files          = 'ARMIDIServices+Protocols/Sources/**/*'
         spspec.dependency            'ARMIDI/ARMIDIServices'
     end
+    
+    spec.subspec 'ARMIDIServices+Classes' do |scspec|
+        scspec.source_files          = 'ARMIDIServices+Classes/Sources/**/*'
+        scspec.dependency            'ARMIDI/ARMIDIServices+Protocols'
+    end
 end
