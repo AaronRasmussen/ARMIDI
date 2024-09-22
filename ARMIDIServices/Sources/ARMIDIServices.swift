@@ -56,6 +56,15 @@ public func setIntegerPropertyForObject(_ object: MIDIObjectRef, property: CFStr
     return
 }
 
+public func getBooleanPropertyForObject(_ object: MIDIObjectRef, property: CFString) throws -> Bool? {
+    guard let integerValue = try getIntegerPropertyForObject(object, property: property) else { return nil }
+    return integerValue != 0
+}
+
+public func setBooleanPropertyForObject(_ object: MIDIObjectRef, property: CFString, toValue value: Bool) throws {
+    return try setIntegerPropertyForObject(object, property: property, toValue: value ? 1 : 0)
+}
+
 public func getDataPropertyForObject(_ object: MIDIObjectRef, property: CFString) throws -> Data? {
     var data: Unmanaged<CFData>? = nil
     let status = MIDIObjectGetDataProperty(object, property, &data)

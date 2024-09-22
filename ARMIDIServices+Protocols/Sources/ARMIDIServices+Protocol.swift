@@ -21,10 +21,6 @@ public protocol ARMIDIRef {
     func objectGetDictionaryProperty(_ property: CFString) throws -> [CFString: Any]?
     func objectSetDictionaryProperty(_ property: CFString, toValue value: [CFString: Any]) throws
     
-    func deviceNumberOfEntities() -> Int
-    func deviceEntityAtIndex(_ index: Int) -> MIDIEntityRef
-    func deviceEntities() -> [MIDIEntityRef]
-    
     func entityDevice() throws -> MIDIDeviceRef
     func entityNumberOfSources() -> Int
     func entitySourceAtIndex(_ index: Int) -> MIDIEndpointRef
