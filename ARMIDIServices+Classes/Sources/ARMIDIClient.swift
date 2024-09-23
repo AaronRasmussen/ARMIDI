@@ -14,4 +14,8 @@ public class ARMIDIClient: ARMIDIClientType {
     public init(midiRef: MIDIClientRef) {
         self.midiRef = midiRef
     }
+    
+    public func name() throws -> String? {
+        return try getStringPropertyForObject(self.midiRef, property: kMIDIPropertyName)
+    }
 }
