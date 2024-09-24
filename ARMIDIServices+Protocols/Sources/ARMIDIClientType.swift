@@ -11,7 +11,7 @@ public protocol ARMIDIClientType {
     
     var midiRef: MIDIClientRef { get }
     
-    func createInputPortNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, usingCallback callback: MIDIReadProc) throws -> MIDIEndpointRef
+    func createInputPortNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, usingCallback callback: @escaping MIDIReadProc) throws -> MIDIEndpointRef
     func createInputPortNamed(_ name: String, usingBlock block: @escaping MIDIReadBlock) throws -> MIDIEndpointRef
     @available(macOS 11.0, *)
     func createInputPortNamed(_ name: String, usingProtocol midiProtocol: MIDIProtocolID, withBlock block: @escaping MIDIReceiveBlock) throws -> MIDIPortRef
@@ -19,7 +19,7 @@ public protocol ARMIDIClientType {
     func createSourceNamed(_ name: String) throws -> MIDIEndpointRef
     @available(macOS 11.0, *)
     func createSourceNamed(_ name: String, usingProtocol midiProtocol: MIDIProtocolID) throws -> MIDIEndpointRef
-    func createDestinationNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, withCallback callback: MIDIReadProc) throws -> MIDIEndpointRef
+    func createDestinationNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, withCallback callback: @escaping MIDIReadProc) throws -> MIDIEndpointRef
     func createDestinationNamed(_ name: String, withBlock block: @escaping MIDIReadBlock) throws -> MIDIEndpointRef
     @available(macOS 11.0, *)
     func createDestinationNamed(_ name: String, usingProtocol midiProtocol: MIDIProtocolID, withBlock block: @escaping MIDIReceiveBlock) throws -> MIDIEndpointRef
@@ -27,7 +27,7 @@ public protocol ARMIDIClientType {
 
 public extension ARMIDIClientType {
     
-    func createInputPortNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, usingCallback callback: MIDIReadProc) throws -> MIDIEndpointRef {
+    func createInputPortNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, usingCallback callback: @escaping MIDIReadProc) throws -> MIDIEndpointRef {
         return try createInputPortForClient(self.midiRef, named: name, withContext: context, usingCallback: callback)
     }
     
@@ -52,7 +52,7 @@ public extension ARMIDIClientType {
         return try createSourceForClient(self.midiRef, named: name, usingProtocol: midiProtocol)
     }
     
-    func createDestinationNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, withCallback callback: MIDIReadProc) throws -> MIDIEndpointRef {
+    func createDestinationNamed(_ name: String, withContext context: UnsafeMutableRawPointer?, withCallback callback: @escaping MIDIReadProc) throws -> MIDIEndpointRef {
         return try createDestinationForClient(self.midiRef, named: name, withContext: context, withCallback: callback)
     }
     

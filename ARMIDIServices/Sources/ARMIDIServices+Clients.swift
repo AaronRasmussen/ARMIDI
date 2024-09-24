@@ -21,7 +21,7 @@ public func createClientNamed(_ name: String, withBlock block: MIDINotifyBlock?)
     return client
 }
 
-public func createInputPortForClient(_ client: MIDIClientRef, named name: String, withContext context: UnsafeMutableRawPointer?, usingCallback callback: MIDIReadProc) throws -> MIDIEndpointRef {
+public func createInputPortForClient(_ client: MIDIClientRef, named name: String, withContext context: UnsafeMutableRawPointer?, usingCallback callback: @escaping MIDIReadProc) throws -> MIDIEndpointRef {
     var port: MIDIPortRef = 0
     let status = MIDIInputPortCreate(client, name as CFString, callback, context, &port)
     guard status == 0 else { throw ARMIDIError(status) }
@@ -65,7 +65,7 @@ public func createSourceForClient(_ client: MIDIClientRef, named name: String, u
     return source
 }
 
-public func createDestinationForClient(_ client: MIDIClientRef, named name: String, withContext context: UnsafeMutableRawPointer?, withCallback callback: MIDIReadProc) throws -> MIDIEndpointRef {
+public func createDestinationForClient(_ client: MIDIClientRef, named name: String, withContext context: UnsafeMutableRawPointer?, withCallback callback: @escaping MIDIReadProc) throws -> MIDIEndpointRef {
     var destination: MIDIEndpointRef = 0
     let status = MIDIDestinationCreate(client, name as CFString, callback, context, &destination)
     guard status == 0 else { throw ARMIDIError(status) }

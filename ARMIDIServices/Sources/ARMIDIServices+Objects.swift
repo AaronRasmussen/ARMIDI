@@ -33,7 +33,7 @@ public func getStringPropertyForObject(_ object: MIDIObjectRef, property: CFStri
     let status = MIDIObjectGetStringProperty(object, property, &stringProperty)
     guard status != kMIDIUnknownProperty else { return nil }
     guard status == 0 else { throw ARMIDIError(status) }
-    return stringProperty?.takeUnretainedValue() as? String
+    return stringProperty?.takeUnretainedValue() as String?
 }
 
 public func setStringPropertyForObject(_ object: MIDIObjectRef, property: CFString, toValue value: String) throws {
