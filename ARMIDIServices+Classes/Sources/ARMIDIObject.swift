@@ -10,16 +10,22 @@ import CoreMIDI
 public class ARMIDIObject: ARMIDIObjectType {
     
     public let midiRef: MIDIObjectRef
+    public let objectType: MIDIObjectType
     
-    internal init(midiRef: MIDIObjectRef) {
-        self.midiRef = midiRef
+    public convenience init(midiRef: MIDIObjectRef) {
+        self.init(midiRef: midiRef, objectType: .other)
     }
     
-    internal func name() throws -> String? {
+    internal init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) {
+        self.midiRef = midiRef
+        self.objectType = objectType
+    }
+    
+    public func name() throws -> String? {
         return try self.getStringProperty(kMIDIPropertyName)
     }
     
-    internal func name(newValue value: String) throws {
+    public func name(newValue value: String) throws {
         return try self.setStringProperty(kMIDIPropertyName, toValue: value)
     }
     
