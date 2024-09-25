@@ -11,11 +11,44 @@ public class ARMIDIClient: ARMIDIClientType {
     
     public let midiRef: MIDIClientRef
     
+    var virtualSources: [ARMIDIInternalSource]? = nil
+    var virtualDestinations: [ARMIDIInternalDestination]? = nil
+    
     public init(midiRef: MIDIClientRef) {
         self.midiRef = midiRef
     }
     
     public func name() throws -> String? {
         return try getStringPropertyForObject(self.midiRef, property: kMIDIPropertyName)
+    }
+    
+    public func setModelForSourceAtIndex(_ index: Int, newValue value: String) throws {
+        try virtualSources?[index].model(newValue: value)
+        return
+    }
+    
+    public func setManufacturerForSourceAtIndex(_ index: Int, newValue value: String) throws {
+        try virtualSources?[index].manufacturer(newValue: value)
+        return
+    }
+    
+    public func setUniqueIDForSourceAtIndex(_ index: Int, newValue value: Int32) throws {
+        try virtualSources?[index].uniqueID(newValue: value)
+        return
+    }
+    
+    public func setModelForDestinationAtIndex(_ index: Int, newValue value: String) throws {
+        try virtualDestinations?[index].model(newValue: value)
+        return
+    }
+    
+    public func setManufacturerForDestinationAtIndex(_ index: Int, newValue value: String) throws {
+        try virtualDestinations?[index].manufacturer(newValue: value)
+        return
+    }
+    
+    public func setUniqueIDForDestinationAtIndex(_ index: Int, newValue value: Int32) throws {
+        try virtualDestinations?[index].uniqueID(newValue: value)
+        return
     }
 }

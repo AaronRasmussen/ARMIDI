@@ -7,7 +7,16 @@
 
 import CoreMIDI
 
-public class ARMIDIEndpoint: ARMIDIObject, ARMIDIEndpointType { }
+public class ARMIDIEndpoint: ARMIDIObject, ARMIDIEndpointType {
+    
+    public override func model() throws -> String? {
+        return try super.model()
+    }
+    
+    public override func manufacturer() throws -> String? {
+        return try super.manufacturer()
+    }
+}
 
 public class ARMIDISource: ARMIDIEndpoint { }
 

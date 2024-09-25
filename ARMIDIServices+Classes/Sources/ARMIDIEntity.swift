@@ -7,7 +7,12 @@
 
 import CoreMIDI
 
-public class ARMIDIEntity: ARMIDIObject, ARMIDIEntityType { }
+public class ARMIDIEntity: ARMIDIObject, ARMIDIEntityType {
+    
+    public override func deviceID() throws -> Int32? {
+        return try super.deviceID()
+    }
+}
 
 public class ARMIDIInternalEntity: ARMIDIEntity {
     public init(midiRef: MIDIEntityRef) {

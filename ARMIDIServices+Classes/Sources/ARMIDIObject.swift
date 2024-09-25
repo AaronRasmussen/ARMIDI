@@ -41,11 +41,11 @@ public class ARMIDIObject: ARMIDIObjectType {
         return try self.getStringProperty(kMIDIPropertyManufacturer)
     }
     
-    internal func manufacurer(newValue value: String) throws {
+    internal func manufacturer(newValue value: String) throws {
         return try self.setStringProperty(kMIDIPropertyManufacturer, toValue: value)
     }
     
-    internal func uniqueID() throws -> Int32? {
+    public func uniqueID() throws -> Int32? {
         return try getIntegerProperty(kMIDIPropertyUniqueID)
     }
     
