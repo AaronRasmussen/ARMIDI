@@ -25,6 +25,7 @@ public class ARMIDIObject: ARMIDIObjectType {
     
     public func refreshProperties() throws -> [CFString: Any]? {
         let properties = try getProperties(deep: true) as? [CFString: Any]
+        self.properties = properties
         return properties
     }
     
