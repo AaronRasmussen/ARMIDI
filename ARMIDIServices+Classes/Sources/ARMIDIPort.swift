@@ -11,7 +11,7 @@ public class ARMIDIPort: ARMIDIPortType {
     
     public let midiRef: MIDIPortRef
     
-    public init(midiRef: MIDIPortRef) {
+    required public init(midiRef: MIDIPortRef) {
         self.midiRef = midiRef
     }
 }

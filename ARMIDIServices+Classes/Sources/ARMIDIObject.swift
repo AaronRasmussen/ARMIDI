@@ -13,7 +13,7 @@ public class ARMIDIObject: ARMIDIObjectType {
     public let objectType: MIDIObjectType
     public var properties: [CFString: Any]?
     
-    public convenience init(midiRef: MIDIObjectRef) throws {
+    required public convenience init(midiRef: MIDIObjectRef) throws {
         try self.init(midiRef: midiRef, objectType: .other)
     }
     

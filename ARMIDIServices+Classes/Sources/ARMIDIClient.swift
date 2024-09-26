@@ -14,8 +14,16 @@ public class ARMIDIClient: ARMIDIClientType {
     var virtualSources: [ARMIDIInternalSource]? = nil
     var virtualDestinations: [ARMIDIInternalDestination]? = nil
     
-    public init(midiRef: MIDIClientRef) {
+    internal init(midiRef: MIDIClientRef) {
         self.midiRef = midiRef
+    }
+    
+    public static func createClient(name: String, context: UnsafeMutableRawPointer?, callback: MIDINotifyProc?) throws -> ARMIDIClient {
+        return ARMIDIClient(midiRef: try ARMIDI.createClient(name: name, context: context, callback: callback))
+    }
+    
+    public static func createClient(name: String, block: MIDINotifyBlock?) throws -> ARMIDIClient {
+        return ARMIDIClient(midiRef: try ARMIDI.createClient(name: name, block: block))
     }
     
     public func name() throws -> String? {

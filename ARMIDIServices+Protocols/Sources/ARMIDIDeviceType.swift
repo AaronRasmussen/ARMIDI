@@ -10,8 +10,8 @@ import CoreMIDI
 public protocol ARMIDIDeviceType: ARMIDIObjectType {
     
     func numberOfEntities() -> Int
-    func entityAtIndex(_ index: Int) -> MIDIEntityRef
-    func entities() -> [MIDIEntityRef]
+    func entityAtIndex<T: ARMIDIEntityType>(_ index: Int) throws -> T
+    func entities<T: ARMIDIEntityType>() throws -> [T]
 }
 
 public extension ARMIDIDeviceType {
@@ -20,11 +20,11 @@ public extension ARMIDIDeviceType {
         return numberOfEntitiesForDevice(self.midiRef)
     }
     
-    func entityAtIndex(_ index: Int) -> MIDIEntityRef {
-        return entityAtIndexForDevice(self.midiRef, index: index)
+    func entityAtIndex<T: ARMIDIEntityType>(_ index: Int) throws -> T {
+        return try T(midiRef: entityAtIndexForDevice(self.midiRef, index: index))
     }
     
-    func entities() -> [MIDIEntityRef] {
-        return (0..<self.numberOfEntities()).map { self.entityAtIndex($0) }
+    func entities<T: ARMIDIEntityType>() throws  -> [T] {
+        return try (0..<self.numberOfEntities()).map { try self.entityAtIndex($0) }
     }
 }

@@ -9,42 +9,42 @@ import CoreMIDI
 
 public protocol ARMIDIEntityType: ARMIDIObjectType {
     
-    func device() throws -> MIDIDeviceRef
+    func device<T: ARMIDIDeviceType>() throws -> T
     func numberOfSources() -> Int
-    func sourceAtIndex(_ index: Int) -> MIDIEndpointRef
-    func sources() -> [MIDIEndpointRef]
+    func sourceAtIndex<T: ARMIDIEndpointType>(_ index: Int) throws -> T
+    func sources<T: ARMIDIEndpointType>() throws -> [T]
     func numberOfDestinations() -> Int
-    func destinationAtIndex(_ index: Int) -> MIDIEndpointRef
-    func destinations() -> [MIDIEndpointRef]
+    func destinationAtIndex<T: ARMIDIEndpointType>(_ index: Int) throws -> T
+    func destinations<T: ARMIDIEndpointType>() throws -> [T]
 }
 
 public extension ARMIDIEntityType {
     
-    func device() throws -> MIDIDeviceRef {
-        return try deviceForEntity(self.midiRef)
+    func device<T: ARMIDIDeviceType>() throws -> T {
+        return try T(midiRef: self.midiRef)
     }
     
     func numberOfSources() -> Int {
         return numberOfSourcesForEntity(self.midiRef)
     }
     
-    func sourceAtIndex(_ index: Int) -> MIDIEndpointRef {
-        return sourceAtIndexForEntity(self.midiRef, index: index)
+    func sourceAtIndex<T: ARMIDIEndpointType>(_ index: Int) throws -> T {
+        return try T(midiRef: sourceAtIndexForEntity(self.midiRef, index: index))
     }
     
-    func sources() -> [MIDIEndpointRef] {
-        return (0..<self.numberOfSources()).map { self.sourceAtIndex($0) }
+    func sources<T: ARMIDIEndpointType>() throws -> [T] {
+        return try (0..<self.numberOfSources()).map { try self.sourceAtIndex($0) }
     }
     
     func numberOfDestinations() -> Int {
         return numberOfDestinationsForEntity(self.midiRef)
     }
     
-    func destinationAtIndex(_ index: Int) -> MIDIEndpointRef {
-        return destinationAtIndexForEntity(self.midiRef, index: index)
+    func destinationAtIndex<T: ARMIDIEndpointType>(_ index: Int) throws -> T {
+        return try T(midiRef: destinationAtIndexForEntity(self.midiRef, index: index))
     }
     
-    func destinations() -> [MIDIEndpointRef] {
-        return (0..<self.numberOfDestinations()).map { self.destinationAtIndex($0) }
+    func destinations<T: ARMIDIEndpointType>() throws -> [T] {
+        return try (0..<self.numberOfDestinations()).map { try self.destinationAtIndex($0) }
     }
 }

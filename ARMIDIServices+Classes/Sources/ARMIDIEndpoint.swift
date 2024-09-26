@@ -18,34 +18,44 @@ public class ARMIDIEndpoint: ARMIDIObject, ARMIDIEndpointType {
     }
 }
 
-public class ARMIDISource: ARMIDIEndpoint { }
+public class ARMIDISource: ARMIDIEndpoint {
+    
+    public static func sources<T: ARMIDIEndpointType>() throws -> [T] {
+        return try ARMIDI.sources().map { try T(midiRef: $0) }
+    }
+}
 
 public class ARMIDIInternalSource: ARMIDISource {
     
-    public init(midiRef: MIDIEndpointRef) throws {
+    public required init(midiRef: MIDIEndpointRef) throws {
         try super.init(midiRef: midiRef, objectType: .source)
     }
 }
 
 public class ARMIDIExternalSource: ARMIDISource {
     
-    public init(midiRef: MIDIEndpointRef) throws {
+    public required init(midiRef: MIDIEndpointRef) throws {
         try super.init(midiRef: midiRef, objectType: .externalSource)
     }
 }
 
-public class ARMIDIDestination: ARMIDIEndpoint { }
+public class ARMIDIDestination: ARMIDIEndpoint {
+    
+    public static func destinations<T: ARMIDIEndpointType>() throws -> [T] {
+        return try ARMIDI.destinations().map { try T(midiRef: $0) }
+    }
+}
 
 public class ARMIDIInternalDestination: ARMIDIDestination {
     
-    public init(midiRef: MIDIEndpointRef) throws {
+    public required init(midiRef: MIDIEndpointRef) throws {
         try super.init(midiRef: midiRef, objectType: .destination)
     }
 }
 
 public class ARMIDIExternalDestination: ARMIDIDestination {
     
-    public init(midiRef: MIDIEndpointRef) throws {
+    public required init(midiRef: MIDIEndpointRef) throws {
         try super.init(midiRef: midiRef, objectType: .externalDestination)
     }
 }

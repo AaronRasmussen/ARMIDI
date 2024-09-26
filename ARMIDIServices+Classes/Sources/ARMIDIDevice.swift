@@ -9,6 +9,14 @@ import CoreMIDI
 
 public class ARMIDIDevice: ARMIDIObject, ARMIDIDeviceType {
     
+    public static func devices<T: ARMIDIDeviceType>() throws -> [T] {
+        return try ARMIDI.devices().map { try T(midiRef: $0) }
+    }
+    
+    public static func externalDevices<T: ARMIDIDeviceType>() throws -> [T] {
+        return try ARMIDI.externalDevices().map { try T(midiRef: $0) }
+    }
+    
     public override func model() throws -> String? {
         return try super.model()
     }
@@ -24,14 +32,14 @@ public class ARMIDIDevice: ARMIDIObject, ARMIDIDeviceType {
 
 public class ARMIDIInternalDevice: ARMIDIDevice {
     
-    public init(midiRef: MIDIObjectRef) throws {
+    public required init(midiRef: MIDIObjectRef) throws {
         try super.init(midiRef: midiRef, objectType: .device)
     }
 }
 
 public class ARMIDIExternalDevice: ARMIDIDevice {
     
-    public init(midiRef: MIDIObjectRef) throws {
+    public required init(midiRef: MIDIObjectRef) throws {
         try super.init(midiRef: midiRef, objectType: .externalDevice)
     }
     
