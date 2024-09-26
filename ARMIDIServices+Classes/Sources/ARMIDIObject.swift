@@ -11,30 +11,42 @@ public class ARMIDIObject: ARMIDIObjectType {
     
     public let midiRef: MIDIObjectRef
     public let objectType: MIDIObjectType
+    public var properties: [CFString: Any]?
     
-    public convenience init(midiRef: MIDIObjectRef) {
-        self.init(midiRef: midiRef, objectType: .other)
+    public convenience init(midiRef: MIDIObjectRef) throws {
+        try self.init(midiRef: midiRef, objectType: .other)
     }
     
-    internal init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) {
+    public init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
         self.midiRef = midiRef
         self.objectType = objectType
+        self.properties = try getProperties(deep: true) as? [CFString: Any]
+    }
+    
+    public func refreshProperties() throws -> [CFString: Any]? {
+        let properties = try getProperties(deep: true) as? [CFString: Any]
+        return properties
     }
     
     public func name() throws -> String? {
-        return try self.getStringProperty(kMIDIPropertyName)
+        return try (self.properties?[kMIDIPropertyName] as? String)
+        ?? self.refreshProperties()?[kMIDIPropertyName] as? String
     }
     
     public func name(newValue value: String) throws {
-        return try self.setStringProperty(kMIDIPropertyName, toValue: value)
+        try self.setStringProperty(kMIDIPropertyName, toValue: value)
+        let _ = try self.refreshProperties()
     }
     
     internal func model() throws -> String? {
-        return try self.getStringProperty(kMIDIPropertyModel)
+        return try (self.properties?[kMIDIPropertyModel] as? String)
+        ?? self.refreshProperties()?[kMIDIPropertyModel] as? String
     }
     
     internal func model(newValue value: String) throws {
-        return try self.setStringProperty(kMIDIPropertyModel, toValue: value)
+        try self.setStringProperty(kMIDIPropertyModel, toValue: value)
+        let _ = try self.refreshProperties()
+        return
     }
     
     internal func manufacturer() throws -> String? {

@@ -24,15 +24,15 @@ public class ARMIDIDevice: ARMIDIObject, ARMIDIDeviceType {
 
 public class ARMIDIInternalDevice: ARMIDIDevice {
     
-    public init(midiRef: MIDIObjectRef) {
-        super.init(midiRef: midiRef, objectType: .device)
+    public init(midiRef: MIDIObjectRef) throws {
+        try super.init(midiRef: midiRef, objectType: .device)
     }
 }
 
 public class ARMIDIExternalDevice: ARMIDIDevice {
     
-    public init(midiRef: MIDIObjectRef) {
-        super.init(midiRef: midiRef, objectType: .externalDevice)
+    public init(midiRef: MIDIObjectRef) throws {
+        try super.init(midiRef: midiRef, objectType: .externalDevice)
     }
     
     public override func model(newValue value: String) throws {
