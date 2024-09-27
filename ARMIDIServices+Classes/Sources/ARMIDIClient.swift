@@ -11,8 +11,8 @@ public class ARMIDIClient: ARMIDIClientType {
     
     public let midiRef: MIDIClientRef
     
-    var virtualSources: [ARMIDIInternalSource]? = nil
-    var virtualDestinations: [ARMIDIInternalDestination]? = nil
+    var virtualSources: [ARMIDISource]? = nil
+    var virtualDestinations: [ARMIDIDestination]? = nil
     
     internal init(midiRef: MIDIClientRef) {
         self.midiRef = midiRef
