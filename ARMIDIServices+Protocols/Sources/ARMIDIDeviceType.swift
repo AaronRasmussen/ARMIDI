@@ -11,7 +11,7 @@ public protocol ARMIDIDeviceType: ARMIDIObjectType {
     
     func numberOfEntities() -> Int
     func entityAtIndex<T: ARMIDIEntityType>(_ index: Int) throws -> T
-    func entities<T: ARMIDIEntityType>() throws -> [T]
+    func getEntities<T: ARMIDIEntityType>() throws -> [T]
 }
 
 public extension ARMIDIDeviceType {
@@ -24,7 +24,7 @@ public extension ARMIDIDeviceType {
         return try T(midiRef: entityAtIndexForDevice(self.midiRef, index: index))
     }
     
-    func entities<T: ARMIDIEntityType>() throws  -> [T] {
+    func getEntities<T: ARMIDIEntityType>() throws  -> [T] {
         return try (0..<self.numberOfEntities()).map { try self.entityAtIndex($0) }
     }
 }

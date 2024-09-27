@@ -9,20 +9,31 @@ import CoreMIDI
 
 public class ARMIDIEntity: ARMIDIObject, ARMIDIEntityType {
     
+    public weak var device: ARMIDIDevice? = nil
     public var sources: [ARMIDISource]? = nil
     public var destinations: [ARMIDIDestination]? = nil
     
-    public override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
-        try super.init(midiRef: midiRef, objectType: objectType)
-        self.sources = try ARMIDI.sourcesForEntity(self.midiRef).map {
-            return try ARMIDISource(midiRef: $0, objectType: objectType == .source ? MIDIObjectType.source : .externalSource)
-        }
-        self.destinations = try ARMIDI.destinationsForEntity(self.midiRef).map {
-            return try ARMIDIDestination(midiRef: $0, objectType: objectType == .destination ? MIDIObjectType.source : .externalDestination)
-        }
+    public required convenience init(midiRef: MIDIObjectRef) throws {
+        try self.init(midiRef: midiRef, objectType: .entity)
+        self.sources = try ARMIDI.sourcesForEntity(self.midiRef).map { try ARMIDISource(midiRef: $0) }
+        self.destinations = try ARMIDI.destinationsForEntity(self.midiRef).map { try ARMIDIDestination(midiRef: $0) }
     }
     
-    public override func deviceID() throws -> Int32? {
-        return try super.deviceID()
+    override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
+        try super.init(midiRef: midiRef, objectType: objectType)
+        self.device = try self.getDevice()
+    }
+}
+
+public class ARMIDIExternalEntity: ARMIDIEntity {
+    
+    override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
+        try super.init(midiRef: midiRef, objectType: objectType)
+    }
+    
+    public required convenience init(midiRef: MIDIObjectRef) throws {
+        try self.init(midiRef: midiRef, objectType: .externalEntity)
+        self.sources = try ARMIDI.sourcesForEntity(self.midiRef).map { try ARMIDIExternalSource(midiRef: $0) }
+        self.destinations = try ARMIDI.destinationsForEntity(self.midiRef).map { try ARMIDIExternalDestination(midiRef: $0) }
     }
 }

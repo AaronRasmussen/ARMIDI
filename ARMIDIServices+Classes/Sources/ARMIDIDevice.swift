@@ -9,31 +9,23 @@ import CoreMIDI
 
 public class ARMIDIDevice: ARMIDIObject, ARMIDIDeviceType {
     
-    public static func devices<T: ARMIDIDeviceType>() throws -> [T] {
-        return try ARMIDI.devices().map { try T(midiRef: $0) }
+    public static func devices() throws -> [ARMIDIDevice] {
+        return try ARMIDI.devices().map { try ARMIDIDevice(midiRef: $0) }
     }
     
-    public static func externalDevices<T: ARMIDIDeviceType>() throws -> [T] {
-        return try ARMIDI.externalDevices().map { try T(midiRef: $0) }
+    public static func externalDevices() throws -> [ARMIDIExternalDevice] {
+        return try ARMIDI.externalDevices().map { try ARMIDIExternalDevice(midiRef: $0) }
     }
     
-    public override func model() throws -> String? {
-        return try super.model()
+    public var entities: [ARMIDIEntity]? = nil
+    
+    public required convenience init(midiRef: MIDIObjectRef) throws {
+        try self.init(midiRef: midiRef, objectType: .device)
+        self.entities = try ARMIDI.entitiesForDevice(self.midiRef).map { try ARMIDIEntity(midiRef: $0) }
     }
     
-    public override func manufacturer() throws -> String? {
-        return try super.manufacturer()
-    }
-    
-    public override func deviceID() throws -> Int32? {
-        return try super.deviceID()
-    }
-}
-
-public class ARMIDIInternalDevice: ARMIDIDevice {
-    
-    public required init(midiRef: MIDIObjectRef) throws {
-        try super.init(midiRef: midiRef, objectType: .device)
+    override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
+        try super.init(midiRef: midiRef, objectType: objectType)
     }
 }
 
@@ -41,17 +33,6 @@ public class ARMIDIExternalDevice: ARMIDIDevice {
     
     public required init(midiRef: MIDIObjectRef) throws {
         try super.init(midiRef: midiRef, objectType: .externalDevice)
-    }
-    
-    public override func model(newValue value: String) throws {
-        return try super.model(newValue: value)
-    }
-    
-    public override func manufacturer(newValue value: String) throws {
-        return try super.manufacturer(newValue: value)
-    }
-    
-    public override func deviceID(newValue value: Int32) throws {
-        return try super.deviceID(newValue: value)
+        self.entities = try ARMIDI.entitiesForDevice(self.midiRef).map { try ARMIDIExternalEntity(midiRef: $0) }
     }
 }

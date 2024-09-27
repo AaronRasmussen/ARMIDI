@@ -13,57 +13,55 @@ public class ARMIDIObject: ARMIDIObjectType {
     public let objectType: MIDIObjectType
     public var properties: [CFString: Any]?
     
-    required public convenience init(midiRef: MIDIObjectRef) throws {
+    public required convenience init(midiRef: MIDIObjectRef) throws {
         try self.init(midiRef: midiRef, objectType: .other)
     }
     
-    public init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
+    init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
         self.midiRef = midiRef
         self.objectType = objectType
         self.properties = try getProperties(deep: true) as? [CFString: Any]
     }
     
-    public func refreshProperties() throws -> [CFString: Any]? {
-        let properties = try getProperties(deep: true) as? [CFString: Any]
-        self.properties = properties
-        return properties
+    public func refreshProperties() throws {
+        self.properties = nil
+        self.properties = try getProperties(deep: true) as? [CFString: Any]
     }
     
     public func name() throws -> String? {
-        return try (self.properties?[kMIDIPropertyName] as? String)
-        ?? self.refreshProperties()?[kMIDIPropertyName] as? String
+        return self.properties?[kMIDIPropertyName] as? String
     }
     
-    public func name(newValue value: String) throws {
+    internal func name(newValue value: String) throws {
         try self.setStringProperty(kMIDIPropertyName, toValue: value)
-        let _ = try self.refreshProperties()
+        return try self.refreshProperties()
     }
     
-    internal func model() throws -> String? {
-        return try (self.properties?[kMIDIPropertyModel] as? String)
-        ?? self.refreshProperties()?[kMIDIPropertyModel] as? String
+    public func model() throws -> String? {
+        return self.properties?[kMIDIPropertyModel] as? String
     }
     
     internal func model(newValue value: String) throws {
         try self.setStringProperty(kMIDIPropertyModel, toValue: value)
-        let _ = try self.refreshProperties()
-        return
+        return try self.refreshProperties()
     }
     
-    internal func manufacturer() throws -> String? {
-        return try self.getStringProperty(kMIDIPropertyManufacturer)
+    public func manufacturer() throws -> String? {
+        return self.properties?[kMIDIPropertyManufacturer] as? String
     }
     
     internal func manufacturer(newValue value: String) throws {
-        return try self.setStringProperty(kMIDIPropertyManufacturer, toValue: value)
+        try self.setStringProperty(kMIDIPropertyManufacturer, toValue: value)
+        return try self.refreshProperties()
     }
     
     public func uniqueID() throws -> Int32? {
-        return try getIntegerProperty(kMIDIPropertyUniqueID)
+        return self.properties?[kMIDIPropertyUniqueID] as? Int32
     }
     
     internal func uniqueID(newValue value: Int32) throws {
-        return try setIntegerProperty(kMIDIPropertyUniqueID, toValue: value)
+        try self.setIntegerProperty(kMIDIPropertyUniqueID, toValue: value)
+        return try self.refreshProperties()
     }
     
     internal func deviceID() throws -> Int32? {

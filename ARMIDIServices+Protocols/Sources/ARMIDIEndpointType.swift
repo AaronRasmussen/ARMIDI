@@ -8,14 +8,14 @@
 import CoreMIDI
 public protocol ARMIDIEndpointType: ARMIDIObjectType {
     
-    func entity<T: ARMIDIEntityType>() throws -> T
+    func getEntity<T: ARMIDIEntityType>() throws -> T
     func flushOutput() throws
 }
 
 public extension ARMIDIEndpointType {
     
-    func entity<T: ARMIDIEntityType>() throws -> T {
-        return try T(midiRef: (entityForEndpoint(self.midiRef)))
+    func getEntity<T: ARMIDIEntityType>() throws -> T {
+        return try T(midiRef: entityForEndpoint(self.midiRef))
     }
     
     func flushOutput() throws {
