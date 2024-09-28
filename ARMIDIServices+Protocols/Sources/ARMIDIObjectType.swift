@@ -75,3 +75,4 @@ public extension ARMIDIObjectType {
         return try setDictionaryPropertyForObject(self.midiRef, property: property, toValue: value)
     }
 }
+
