@@ -9,6 +9,8 @@ import CoreMIDI
 
 public protocol ARMIDIEntityType: ARMIDIObjectType {
     
+    init(midiRef: MIDIObjectRef) throws
+    
     func getDevice<T: ARMIDIDeviceType>() throws -> T
     func numberOfSources() -> Int
     func sourceAtIndex<T: ARMIDIEndpointType>(_ index: Int) throws -> T

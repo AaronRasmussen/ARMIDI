@@ -8,6 +8,8 @@
 import CoreMIDI
 public protocol ARMIDIEndpointType: ARMIDIObjectType {
     
+    init(midiRef: MIDIObjectRef) throws
+    
     func getEntity<T: ARMIDIEntityType>() throws -> T
     func flushOutput() throws
 }

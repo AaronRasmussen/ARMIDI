@@ -11,8 +11,6 @@ public protocol ARMIDIObjectType {
     
     var midiRef: UInt32 { get }
     
-    init(midiRef: MIDIObjectRef) throws
-    
     func getProperties(deep: Bool) throws -> CFPropertyList?
     func removeProperty(_ property: CFString) throws
     func getStringProperty(_ property: CFString) throws -> String?

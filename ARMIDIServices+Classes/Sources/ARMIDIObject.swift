@@ -7,6 +7,8 @@
 
 import CoreMIDI
 
+
+
 public class ARMIDIObject: ARMIDIObjectType {
     
     public let midiRef: MIDIObjectRef
@@ -20,12 +22,12 @@ public class ARMIDIObject: ARMIDIObjectType {
     init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
         self.midiRef = midiRef
         self.objectType = objectType
-        self.properties = try getProperties(deep: true) as? [CFString: Any]
+        self.properties = try self.getProperties(deep: true) as? [CFString: Any]
     }
     
     public func refreshProperties() throws {
         self.properties = nil
-        self.properties = try getProperties(deep: true) as? [CFString: Any]
+        self.properties = try self.getProperties(deep: true) as? [CFString: Any]
     }
     
     public func name() throws -> String? {

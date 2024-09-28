@@ -7,7 +7,7 @@
 
 import CoreMIDI
 
-public protocol ARMIDIClientType {
+public protocol ARMIDIClientType: ARMIDIObjectType {
     
     var midiRef: MIDIClientRef { get }
     
