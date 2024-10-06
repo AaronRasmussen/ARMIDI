@@ -285,7 +285,7 @@ extension ARMIDIParser {
                         return (.modePolyModeOn(ch: ch), .parsing(bytes: bytes, index: i + 1))
                         
                     case let b:
-                        fatalError("Parser Error: data byte discovered in the data during a call to parseDataByte (state: \(state)).")
+                        fatalError("Parser Error: unexpected data byte (\(String(format: "%X", b)) discovered in the data during a call to parseDataByte (state: \(state)).")
                     }
                     
                 case let b where b >> 4 == 0xC:
