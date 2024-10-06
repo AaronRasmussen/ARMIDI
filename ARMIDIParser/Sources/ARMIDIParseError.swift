@@ -11,7 +11,7 @@ public enum ARMIDIParseError: Error {
     case undefinedSystemRealTimeStatusByte0xFD
     case undefinedSystemCommonStatusByte0xF4
     case undefinedSystemCommonStatusByte0xF5
-    case unexpectedSystemCommonStatusByte(state: MIDIState)
-    case unexpectedSystemExclusiveStatusByte(state: MIDIState)
-    case unexpectedChannelStatusByte(state: MIDIState)
+    case unexpectedSystemCommonStatusByte(state: ARMIDIParseState)
+    case unexpectedSystemExclusiveStatusByte(state: ARMIDIParseState)
+    case unexpectedChannelStatusByte(state: ARMIDIParseState)
 }
