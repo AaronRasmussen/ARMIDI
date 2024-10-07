@@ -1,5 +1,5 @@
 //
-//  ARMIDIParseState.swift
+//  ARMIDIParserState.swift
 //  
 //
 //  Created by Aaron Rasmussen on 10/5/24.

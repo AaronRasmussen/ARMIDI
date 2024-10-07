@@ -1,11 +1,11 @@
 //
-//  ARMIDIMessage.swift
+//  ARMIDIParserMessage.swift
 //  
 //
 //  Created by Aaron Rasmussen on 10/5/24.
 //
 
-public enum ARMIDIMessage {
+public enum ARMIDIParserMessage {
     
     case voiceNoteOff(channel: Int, note: UInt8, velocity: UInt8)
     case voiceNoteOn(channel: Int, note: UInt8, velocity: UInt8)
