@@ -5,7 +5,7 @@
 //  Created by Aaron Rasmussen on 10/5/24.
 //
 
-public enum ARMIDIParseState : Sendable {
+public enum ARMIDIParseState {
     
     case parsing(bytes: Data, index: Int)
     case parsingData(bytes: Data, index: Int, statusByte: UInt8, data: Data, expectedDataCount: Int, currentDataCount: Int)
