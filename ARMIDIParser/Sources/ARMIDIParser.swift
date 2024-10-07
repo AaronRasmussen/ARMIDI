@@ -9,6 +9,8 @@ public typealias ARMIDIToken = (ARMIDIMessage?, ARMIDIParseState)
 
 public class ARMIDIParser: ARMIDIParserType {
     
+    public init() { }
+    
     var currentState: ARMIDIParseState? = nil
     
     public func handle(data: [UInt8]) throws {
