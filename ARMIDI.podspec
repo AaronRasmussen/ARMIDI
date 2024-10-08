@@ -20,6 +20,10 @@ Pod::Spec.new do |spec|
         pspec.source_files          = 'ARMIDIParser/Sources/**/*'
     end
     
+    spec.subspec 'ARMIDIDX21' do |dxspec|
+        dxspec.source_files          = 'ARMIDIDX21/Sources/**/*'
+    end
+    
     spec.subspec 'ARMIDIError' do |espec|
         espec.source_files          = 'ARMIDIError/Sources/**/*'
     end
