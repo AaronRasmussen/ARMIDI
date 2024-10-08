@@ -66,7 +66,7 @@ public class ARMIDIDX21SysExParser: ARMIDIParser {
                 guard d[2] <= 0x0F else { throw SysExError.invalidSubstatusChNumber }
                 guard d[3] == 0x03 else { throw SysExError.invalidFormatNumber }
                 guard UInt16(d[4]) << 8 + UInt16(d[5]) == 0x005D else { throw SysExError.invalidByteCount }
-                guard d[99] == d[6..<99].reduce(UInt8(0), { $0 + (~$1) + 1 }) else { throw SysExError.invalidCheckSum }
+                guard d[99] == d[6..<99].reduce(UInt8(0), { $0 + (~$1 + 1) }) else { throw SysExError.invalidCheckSum }
                 guard d[100] == StatusByteSystemCommonEOX else { throw SysExError.invalidEOX }
                 return true
                 
