@@ -17,8 +17,8 @@ public class ARMIDIParser: ARMIDIParserType {
         self.currentState = state
     }
     
+    // Override this function
     public func process(midiMessage: ARMIDIParserMessage?) {
-        if let m = midiMessage { print(m) }
+        return
     }
-    
 }
