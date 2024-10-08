@@ -76,15 +76,15 @@ extension ARMIDIParserType {
         
             switch byte {
                 
-            case 0xF8:          return .systemRealTimeTimingClock
-            case 0xFA:          return .systemRealTimeStart
-            case 0xFB:          return .systemRealTimeContinue
-            case 0xFC:          return .systemRealTimeStop
-            case 0xFE:          return .systemRealTimeActiveSensing
-            case 0xFF:          return .systemRealTimeSystemReset
+            case StatusByteSystemRealTimeTimingClock:    return .systemRealTimeTimingClock
+            case StatusByteSystemRealTimeStart:          return .systemRealTimeStart
+            case StatusByteSystemRealTimeContinue:       return .systemRealTimeContinue
+            case StatusByteSystemRealTimeStop:           return .systemRealTimeStop
+            case StatusByteSystemRealTimeActiveSensing:  return .systemRealTimeActiveSensing
+            case StatusByteSystemRealTimeSystemReset:    return .systemRealTimeSystemReset
                 
-            case 0xF9:          throw ARMIDIParserError.undefinedSystemRealTimeStatusByte0xF9
-            case 0xFD:          throw ARMIDIParserError.undefinedSystemRealTimeStatusByte0xFD
+            case StatusByteSystemRealTimeUndefined_0xF9: throw ARMIDIParserError.undefinedSystemRealTimeStatusByte0xF9
+            case StatusByteSystemRealTimeUndefined_0xFD: throw ARMIDIParserError.undefinedSystemRealTimeStatusByte0xFD
                 
             default:
                 fatalError("Parser Error: parseSystemRealTimeMessage was handed a non-Real Time system status byte (byte: \(byte))")
@@ -117,25 +117,25 @@ extension ARMIDIParserType {
             
             switch bytes[i] {
             
-            case 0xF1:
+            case StatusByteSystemCommonMIDITimeCode:
                 return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: 0xF1, data: Data(), expectedDataCount: 1, currentDataCount: 0))
                 
-            case 0xF2:
+            case StatusByteSystemCommonSongPosition:
                 return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: 0xF2, data: Data(), expectedDataCount: 2, currentDataCount: 0))
             
-            case 0xF3:
+            case StatusByteSystemCommonSongSelect:
                 return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: 0xF2, data: Data(), expectedDataCount: 1, currentDataCount: 0))
                 
-            case 0xF4:
+            case StatusByteSystemCommonUndefined_0xF4:
                 throw ARMIDIParserError.undefinedSystemCommonStatusByte0xF4
                 
-            case 0xF5:
+            case StatusByteSystemCommonUndefined_0xF5:
                 throw ARMIDIParserError.undefinedSystemCommonStatusByte0xF5
                 
-            case 0xF6:
+            case StatusByteSystemCommonTuneRequest:
                 return (.systemCommonTuneRequest, .parsing(bytes: bytes, index: i + 1))
                 
-            case 0xF7:
+            case StatusByteSystemCommonEOX:
                 return (.unassociatedDataTail(Data([0xF7])), .parsing(bytes: bytes, index: i + 1))
                 
             default:
@@ -144,10 +144,10 @@ extension ARMIDIParserType {
             
         case .parsingSystemExclusiveMessage(let bytes, let i, var data):
             
-            switch bytes[i] == 0xF7 {
+            switch bytes[i] == StatusByteSystemExclusive {
                 
             case true:
-                data.append(0xF7)
+                data.append(StatusByteSystemExclusive)
                 return (.systemExclusive(data: data), .parsing(bytes: bytes, index: i + 1))
                 
             case false:
@@ -156,10 +156,10 @@ extension ARMIDIParserType {
             
         case    .parsingDataTail(bytes: let bytes, let i, var data):
             
-            switch bytes[i] == 0xF7 {
+            switch bytes[i] == StatusByteSystemExclusive {
                 
             case true:
-                data.append(0xF7)
+                data.append(StatusByteSystemExclusive)
                 return (.unassociatedDataTail(data), .parsing(bytes: bytes, index: i + 1))
                 
             case false:
