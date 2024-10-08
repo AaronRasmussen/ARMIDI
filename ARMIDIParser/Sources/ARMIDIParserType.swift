@@ -47,7 +47,6 @@ extension ARMIDIParserType {
                 switch bs[i].isStatusByte {
                 
                 case true:
-                    print("Status byte \(bs[i]) found...")
                     return try parseStatusByte(state: state)
                 
                 case false:
@@ -78,7 +77,6 @@ extension ARMIDIParserType {
                 return try parseSystemCommonMessage(state: state)
                 
             case let b where b.isSystemExclusiveStatusByte:
-                print("SysEx status byte received...")
                 return try parseSystemExclusiveMessage(state: state)
                 
             case let b where b.isChannelStatusByte:
