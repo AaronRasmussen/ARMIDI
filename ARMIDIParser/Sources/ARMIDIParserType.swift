@@ -160,8 +160,18 @@ extension ARMIDIParserType {
                 fatalError("Parser Error: parseSystemCommonMessage was called with a non-system common status byte (byte: \(bs[i])).")
             }
             
-        case    .parsingSystemExclusiveMessage(_, _, _),
-                .parsingData(_, _, _, _, _, _):
+        case    .parsingSystemExclusiveMessage(let bs, let i, var d):
+            switch bs[i] == StatusByteSystemCommonEOX {
+            
+            case true:
+                d.append(bs[i])
+                return (.systemExclusive(data: d), .parsing(bytes: bs, index: i + 1))
+                
+            case false:
+                throw ARMIDIParserError.unexpectedSystemCommonStatusByte(state: state)
+            }
+            
+        case    .parsingData(_, _, _, _, _, _):
             throw ARMIDIParserError.unexpectedSystemCommonStatusByte(state: state)
             
         case .parsingDataTail(bytes: let bs, let i, let d):
