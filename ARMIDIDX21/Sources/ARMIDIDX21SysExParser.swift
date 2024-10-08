@@ -85,17 +85,15 @@ public class ARMIDIDX21SysExParser: ARMIDIParser {
                 guard d[1] == 0x43 else { throw SysExError.invalidManufacturerID }
                 guard d[2] <= 0x0F else { throw SysExError.invalidSubstatusChNumber }
                 guard d[3] == 0x04 else { throw SysExError.invalidFormatNumber }
-                guard UInt16(d[4]) << 8 + UInt16(d[5]) == 0x1000 else { throw SysExError.invalidByteCount }
+                guard UInt16(d[4]) << 8 + UInt16(d[5]) == 0x2000 else { throw SysExError.invalidByteCount }
                 
                 let twosComplementSum: UInt = d[6..<4102].reduce(UInt(0), { sum, dataByte in
                     sum + UInt(~dataByte) + 1 })
                 let checkSum = UInt8(twosComplementSum & 0x7F)
                 
                 guard d[4102] == checkSum else { throw SysExError.invalidCheckSum }
-                
                 guard d[4103] == StatusByteSystemCommonEOX else { throw SysExError.invalidEOX }
                 
-                print("SysEx validates...")
                 return true
             }
         } catch {
