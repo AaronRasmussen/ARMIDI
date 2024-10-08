@@ -81,4 +81,16 @@ extension UInt8 {
             return self == StatusByteSystemExclusive
         }
     }
+    
+    public var channelMessageStatusBits: UInt8 {
+        return self & 0xF0
+    }
+    
+    public var channelMessageChannelBits: UInt8 {
+        return self & 0x0F
+    }
+    
+    public var channel: Int {
+        return Int(self.channelMessageChannelBits) + 1
+    }
 }

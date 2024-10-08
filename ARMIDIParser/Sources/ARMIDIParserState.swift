@@ -13,7 +13,25 @@ public enum ARMIDIParserState {
     case parsingDataTail(bytes: Data, index: Int, data: Data)
     case running(bytes: Data, index: Int, statusByte: UInt8)
     
-    public func addBytes(bytes: [UInt8]) -> ARMIDIParserState {
+    public init() {
+        self = .parsing(bytes: Data(), index: 0)
+    }
+    
+    public var hasBytesLeft: Bool { get
+        {
+            switch self {
+                
+            case    .parsing(let bs, let i),
+                    .parsingData(let bs, let i, _, _, _, _),
+                    .parsingSystemExclusiveMessage(let bs, let i, _),
+                    .parsingDataTail(let bs, let i, _),
+                    .running(let bs, let i, _):
+                return i < bs.count
+            }
+        }
+    }
+    
+    public func addBytes(_ bytes: [UInt8]) -> ARMIDIParserState {
         switch self {
             
         case .parsing(var bs, let i):

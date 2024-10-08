@@ -7,26 +7,44 @@
 
 public protocol ARMIDIParserType {
     
-    func handle(data: [UInt8]) throws
-    func parseMIDI(state: ARMIDIParserState) throws -> (ARMIDIParserMessage?, ARMIDIParserState)
+    var currentState: ARMIDIParserState { get set }
+    
+    func process(midiMessage: ARMIDIParserMessage?)
 }
 
 extension ARMIDIParserType {
     
-    public func parseMIDI(state: ARMIDIParserState) throws -> (ARMIDIParserMessage?, ARMIDIParserState) {
+    public mutating func handle(bytes: [UInt8]) throws {
+        
+        self.currentState = self.currentState.addBytes(bytes)
+        
+        var bytesLeft = !bytes.isEmpty
+        
+        while bytesLeft {
+            
+            let (m, s) = try parseMIDI(state: self.currentState)
+            
+            self.process(midiMessage: m)
+            self.currentState = s
+            
+            bytesLeft = s.hasBytesLeft
+        }
+    }
+    
+    fileprivate func parseMIDI(state: ARMIDIParserState) throws -> (ARMIDIParserMessage?, ARMIDIParserState) {
         
         switch state {
-        case    .parsing(let bytes, let i),
-                .parsingData(bytes: let bytes, let i, _, _, _, _),
-                .parsingSystemExclusiveMessage(let bytes, let i, _),
-                .parsingDataTail(let bytes, let i, _),
-                .running(let bytes, let i, _):
+        case    .parsing(let bs, let i),
+                .parsingData(bytes: let bs, let i, _, _, _, _),
+                .parsingSystemExclusiveMessage(let bs, let i, _),
+                .parsingDataTail(let bs, let i, _),
+                .running(let bs, let i, _):
             
-            switch i < bytes.count {
+            switch i < bs.count {
             
             case true:
                 
-                switch bytes[i].isStatusByte {
+                switch bs[i].isStatusByte {
                 
                 case true:
                     return try parseStatusByte(state: state)
@@ -44,13 +62,13 @@ extension ARMIDIParserType {
     fileprivate func parseStatusByte(state: ARMIDIParserState) throws -> (ARMIDIParserMessage?, ARMIDIParserState) {
         
         switch state {
-        case    .parsing(let bytes, let i),
-                .parsingDataTail(let bytes, let i, _),
-                .parsingData(bytes: let bytes, let i, _, _, _, _),
-                .parsingSystemExclusiveMessage(let bytes, let i, _),
-                .running(let bytes, let i, _):
+        case    .parsing(let bs, let i),
+                .parsingDataTail(let bs, let i, _),
+                .parsingData(bytes: let bs, let i, _, _, _, _),
+                .parsingSystemExclusiveMessage(let bs, let i, _),
+                .running(let bs, let i, _):
             
-            switch bytes[i] {
+            switch bs[i] {
                 
             case let b where b.isSystemRealTimeStatusByte:
                 return try parseSystemRealTimeMessage(state: state)
@@ -92,20 +110,20 @@ extension ARMIDIParserType {
         }
         
         switch state {
-        case .parsing(let bytes, let i):
-            return (try realTimeMessageForByte(bytes[i]), .parsing(bytes: bytes, index: i + 1))
+        case .parsing(let bs, let i):
+            return (try realTimeMessageForByte(bs[i]), .parsing(bytes: bs, index: i + 1))
                 
-        case .parsingData(let bytes, let i, let statusByte, let data, let expectedDataCount, let currentDataCount):
-            return (try realTimeMessageForByte(bytes[i]), .parsingData(bytes: bytes, index: i + 1, statusByte: statusByte, data: data, expectedDataCount: expectedDataCount, currentDataCount: currentDataCount))
+        case .parsingData(let bs, let i, let sB, let d, let eDC, let cDC):
+            return (try realTimeMessageForByte(bs[i]), .parsingData(bytes: bs, index: i + 1, statusByte: sB, data: d, expectedDataCount: eDC, currentDataCount: cDC))
                 
-        case .parsingDataTail(let bytes, let i, let data):
-            return (try realTimeMessageForByte(bytes[i]), .parsingDataTail(bytes: bytes, index: i + 1, data: data))
+        case .parsingDataTail(let bs, let i, let d):
+            return (try realTimeMessageForByte(bs[i]), .parsingDataTail(bytes: bs, index: i + 1, data: d))
                 
-        case .parsingSystemExclusiveMessage(let bytes, let i, let data):
-            return (try realTimeMessageForByte(bytes[i]), .parsingSystemExclusiveMessage(bytes: bytes, index: i + 1, data: data))
+        case .parsingSystemExclusiveMessage(let bs, let i, let d):
+            return (try realTimeMessageForByte(bs[i]), .parsingSystemExclusiveMessage(bytes: bs, index: i + 1, data: d))
             
-        case .running(let bytes, let i, let statusByte):
-            return (try realTimeMessageForByte(bytes[i]), .running(bytes: bytes, index: i + 1, statusByte: statusByte))
+        case .running(let bs, let i, let sB):
+            return (try realTimeMessageForByte(bs[i]), .running(bytes: bs, index: i + 1, statusByte: sB))
         }
     }
 
@@ -113,18 +131,18 @@ extension ARMIDIParserType {
         
         switch state {
             
-        case    .parsing(let bytes, let i):
+        case .parsing(let bs, let i):
             
-            switch bytes[i] {
+            switch bs[i] {
             
             case StatusByteSystemCommonMIDITimeCode:
-                return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: 0xF1, data: Data(), expectedDataCount: 1, currentDataCount: 0))
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: StatusByteSystemCommonMIDITimeCode, data: Data(), expectedDataCount: 1, currentDataCount: 0))
                 
             case StatusByteSystemCommonSongPosition:
-                return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: 0xF2, data: Data(), expectedDataCount: 2, currentDataCount: 0))
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: StatusByteSystemCommonSongPosition, data: Data(), expectedDataCount: 2, currentDataCount: 0))
             
             case StatusByteSystemCommonSongSelect:
-                return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: 0xF2, data: Data(), expectedDataCount: 1, currentDataCount: 0))
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: StatusByteSystemCommonSongSelect, data: Data(), expectedDataCount: 1, currentDataCount: 0))
                 
             case StatusByteSystemCommonUndefined_0xF4:
                 throw ARMIDIParserError.undefinedSystemCommonStatusByte0xF4
@@ -133,44 +151,24 @@ extension ARMIDIParserType {
                 throw ARMIDIParserError.undefinedSystemCommonStatusByte0xF5
                 
             case StatusByteSystemCommonTuneRequest:
-                return (.systemCommonTuneRequest, .parsing(bytes: bytes, index: i + 1))
+                return (.systemCommonTuneRequest, .parsing(bytes: bs, index: i + 1))
                 
             case StatusByteSystemCommonEOX:
-                return (.unassociatedDataTail(Data([0xF7])), .parsing(bytes: bytes, index: i + 1))
+                return (.unassociatedDataTail(Data([StatusByteSystemCommonEOX])), .parsing(bytes: bs, index: i + 1))
                 
             default:
-                fatalError("Parser Error: parseSystemCommonMessage was called with a non-system status byte (byte: \(bytes[i])).")
+                fatalError("Parser Error: parseSystemCommonMessage was called with a non-system common status byte (byte: \(bs[i])).")
             }
             
-        case .parsingSystemExclusiveMessage(let bytes, let i, var data):
-            
-            switch bytes[i] == StatusByteSystemExclusive {
-                
-            case true:
-                data.append(StatusByteSystemExclusive)
-                return (.systemExclusive(data: data), .parsing(bytes: bytes, index: i + 1))
-                
-            case false:
-                throw ARMIDIParserError.unexpectedSystemCommonStatusByte(state: state)
-            }
-            
-        case    .parsingDataTail(bytes: let bytes, let i, var data):
-            
-            switch bytes[i] == StatusByteSystemExclusive {
-                
-            case true:
-                data.append(StatusByteSystemExclusive)
-                return (.unassociatedDataTail(data), .parsing(bytes: bytes, index: i + 1))
-                
-            case false:
-                return (.unassociatedDataTail(data), .parsing(bytes: bytes, index: i))
-            }
-            
-        case    .parsingData(_, _, _, _, _, _):
+        case    .parsingSystemExclusiveMessage(_, _, _),
+                .parsingData(_, _, _, _, _, _):
             throw ARMIDIParserError.unexpectedSystemCommonStatusByte(state: state)
             
-        case    .running(let bytes, let i, _):
-            return try parseSystemCommonMessage(state: .parsing(bytes: bytes, index: i))
+        case .parsingDataTail(bytes: let bs, let i, let d):
+            return (.unassociatedDataTail(d), .parsing(bytes: bs, index: i))
+            
+        case .running(let bs, let i, _):
+            return try parseSystemCommonMessage(state: .parsing(bytes: bs, index: i))
         }
     }
 
@@ -178,42 +176,47 @@ extension ARMIDIParserType {
         
         switch state {
             
-        case    .parsing(let bytes, let i):
-            return try parseMIDI(state: .parsingSystemExclusiveMessage(bytes: bytes, index: i + 1, data: Data([0xF8])))
+        case .parsing(let bs, let i):
+            return try parseMIDI(state: .parsingSystemExclusiveMessage(bytes: bs, index: i + 1, data: Data([bs[i]])))
             
         case    .parsingData(_, _, _, _, _, _),
                 .parsingSystemExclusiveMessage(_, _, _):
             throw ARMIDIParserError.unexpectedSystemExclusiveStatusByte(state: state)
             
-        case    .parsingDataTail(let bytes, let i, let data):
-            return (.unassociatedDataTail(data), .parsing(bytes: bytes, index: i))
+        case .parsingDataTail(let bs, let i, let d):
+            return (.unassociatedDataTail(d), .parsingSystemExclusiveMessage(bytes: bs, index: i + 1, data: Data([bs[i]])))
             
-        case    .running(let bytes, let i, _):
-            return try parseSystemExclusiveMessage(state: .parsing(bytes: bytes, index: i))
+        case .running(let bs, let i, _):
+            return try parseMIDI(state: .parsingSystemExclusiveMessage(bytes: bs, index: i + 1, data: Data([bs[i]])))
         }
     }
 
     fileprivate func parseChannelMessageStatusByte(state: ARMIDIParserState) throws -> (ARMIDIParserMessage?, ARMIDIParserState) {
         switch state {
-        case    .parsing(let bytes, let i):
+        case    .parsing(let bs, let i):
             
-            switch bytes[i] >> 4 {
+            switch bs[i].channelMessageStatusBits {
                 
-            case let b where b == 0xC || b == 0xD:
-                return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: bytes[i], data: Data(), expectedDataCount: 1, currentDataCount: 0))
+            case    StatusByteProgramChange,
+                    StatusByteChannelAftertouch:
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: bs[i], data: Data(), expectedDataCount: 1, currentDataCount: 0))
                 
-            case let b where b == 0x8 || b == 0x9 || b == 0xA || b == 0xB || b == 0xE:
-                return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: bytes[i], data: Data(), expectedDataCount: 2, currentDataCount: 0))
+            case    StatusByteNoteOff,
+                    StatusByteNoteOn,
+                    StatusBytePolyphonicAftertouch,
+                    StatusByteControlChangeOrMode,
+                    StatusBytePitchBendChange:
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: bs[i], data: Data(), expectedDataCount: 2, currentDataCount: 0))
                 
             case let b:
                 fatalError("Parse Error: parseChannelMessageStatusByte was handed a non-channel message status byte (byte: \(b), state: \(state)).")
             }
             
-        case    .parsingDataTail(let bytes, let i, let data):
-            return (.unassociatedDataTail(data), .parsing(bytes: bytes, index: i))
+        case    .parsingDataTail(let bs, let i, let d):
+            return (.unassociatedDataTail(d), .parsing(bytes: bs, index: i))
             
-        case    .running(let bytes, let i, _):
-            return try parseChannelMessageStatusByte(state: .parsing(bytes: bytes, index: i))
+        case    .running(let bs, let i, _):
+            return try parseChannelMessageStatusByte(state: .parsing(bytes: bs, index: i))
             
         case    .parsingData(_, _, _, _, _, _),
                 .parsingSystemExclusiveMessage(_, _, _):
@@ -226,119 +229,122 @@ extension ARMIDIParserType {
         
         switch state {
             
-        case    .parsing(let bytes, let i):
-            return try parseMIDI(state: .parsingDataTail(bytes: bytes, index: i, data: Data()))
+        case    .parsing(let bs, let i):
+            return try parseMIDI(state: .parsingDataTail(bytes: bs, index: i, data: Data()))
         
-        case    .parsingData(let bytes, let i, let statusByte, var data, let expectedDataCount, var currentDataCount):
+        case    .parsingData(let bs, let i, let sB, var d, let eDC, var cDC):
             
-            data.append(bytes[i])
-            currentDataCount += 1
+            d.append(bs[i])
+            cDC += 1
             
-            switch currentDataCount < expectedDataCount {
+            switch cDC < eDC {
                 
             case true:
-                return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: statusByte, data: data, expectedDataCount: expectedDataCount, currentDataCount: currentDataCount + 1))
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: sB, data: d, expectedDataCount: eDC, currentDataCount: cDC + 1))
                 
             case false:
-                let ch = Int(statusByte & 0x0F + 1)
+                let ch = sB.channel
                 
-                switch statusByte {
+                switch sB.channelMessageStatusBits {
                     
-                case let b where b >> 4 == 0x8:
-                    return (.voiceNoteOff(channel: ch, note: data[0], velocity: data[1]), .parsing(bytes: bytes, index: i + 1))
+                case StatusByteNoteOff:
+                    return (.voiceNoteOff(channel: ch, note: d[0], velocity: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case let b where b >> 4 == 0x9:
-                    return (.voiceNoteOn(channel: ch, note: data[0], velocity: data[1]), .parsing(bytes: bytes, index: i + 1))
+                case StatusByteNoteOn:
+                    return (.voiceNoteOn(channel: ch, note: d[0], velocity: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case let b where b >> 4 == 0xA:
-                    return (.voicePolyphonicAftertouch(channel: ch, note: data[0], pressure: data[1]), .parsing(bytes: bytes, index: i + 1))
+                case StatusBytePolyphonicAftertouch:
+                    return (.voicePolyphonicAftertouch(channel: ch, note: d[0], pressure: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case let b where b >> 4 == 0xB:
+                case StatusByteControlChangeOrMode:
                     
-                    switch data[0] {
+                    switch d[0] {
                         
-                    case let b where b < 0x78:
-                        return (.voiceControlChange(channel: ch, controlNumber: data[0], value: data[1]), .parsing(bytes: bytes, index: i + 1))
+                    case let b where b < DataByteModeAllSoundsOff:
+                        return (.voiceControlChange(channel: ch, controlNumber: d[0], value: d[1]), .parsing(bytes: bs, index: i + 1))
                         
-                    case let b where b == 0x78:
-                        return (.modeAllSoundOff(ch: ch), .parsing(bytes: bytes, index: i + 1))
+                    case DataByteModeAllSoundsOff:
+                        return (.modeAllSoundOff(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case let b where b == 0x79:
-                        return (.modeResetAllControllers(ch: ch), .parsing(bytes: bytes, index: i + 1))
+                    case DataByteModeResetAllControllers:
+                        return (.modeResetAllControllers(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case let b where b == 0x7A:
-                        return (.modeLocalControl(ch: ch, on: data[1] == 0 ? false : true), .parsing(bytes: bytes, index: i + 1))
+                    case DataByteModeLocalControl:
+                        return (.modeLocalControl(ch: ch, on: d[1] == 0 ? false : true), .parsing(bytes: bs, index: i + 1))
                         
-                    case let b where b == 0x7B:
-                        return (.modeAllNotesOff(ch: ch), .parsing(bytes: bytes, index: i + 1))
+                    case DataByteModeAllNotesOff:
+                        return (.modeAllNotesOff(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case let b where b == 0x7C:
-                        return (.modeOmniModeOff(ch: ch), .parsing(bytes: bytes, index: i + 1))
+                    case DataByteModeOmniModeOff:
+                        return (.modeOmniModeOff(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case let b where b == 0x7D:
-                        return (.modeOmniModeOn(ch: ch), .parsing(bytes: bytes, index: i + 1))
+                    case DataByteModeOmniModeOn:
+                        return (.modeOmniModeOn(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case let b where b == 0x7E:
-                        return (.modeMonoModeOn(ch: ch, numberOfChannels: data[1]), .parsing(bytes: bytes, index: i + 1))
+                    case DataByteModeMonoModeOn:
+                        return (.modeMonoModeOn(ch: ch, numberOfChannels: d[1]), .parsing(bytes: bs, index: i + 1))
                         
-                    case let b where b == 0x7F:
-                        return (.modePolyModeOn(ch: ch), .parsing(bytes: bytes, index: i + 1))
+                    case DataByteModePolyModeOn:
+                        return (.modePolyModeOn(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
                     case let b:
                         fatalError("Parser Error: unexpected data byte (\(String(format: "%X", b)) discovered in the data during a call to parseDataByte (state: \(state)).")
                     }
                     
-                case let b where b >> 4 == 0xC:
-                    return (.voiceProgramChange(channel: ch, program: data[0]), .parsing(bytes: bytes, index: i + 1))
+                case StatusByteProgramChange:
+                    return (.voiceProgramChange(channel: ch, program: d[0]), .parsing(bytes: bs, index: i + 1))
                     
-                case let b where b >> 4 == 0xD:
-                    return (.voiceChannelAftertouch(channel: ch, pressure: data[0]), .parsing(bytes: bytes, index: i + 1))
+                case StatusByteChannelAftertouch:
+                    return (.voiceChannelAftertouch(channel: ch, pressure: d[0]), .parsing(bytes: bs, index: i + 1))
                     
-                case let b where b >> 4 == 0xE:
-                    return (.voicePitchBendChange(ch: ch, msb: data[0], lsb: data[1]), .parsing(bytes: bytes, index: i + 1))
+                case StatusBytePitchBendChange:
+                    return (.voicePitchBendChange(ch: ch, msb: d[0], lsb: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case let b where b == 0xF1:
-                    return (.systemCommonMIDITimeCode(timeCode: data[0]), .parsing(bytes: bytes, index: i + 1))
+                case StatusByteSystemCommonMIDITimeCode:
+                    return (.systemCommonMIDITimeCode(timeCode: d[0]), .parsing(bytes: bs, index: i + 1))
                     
-                case let b where b == 0xF2:
-                    return (.systemCommonSongPosition(lsb: data[0], msb: data[1]), .parsing(bytes: bytes, index: i + 1))
+                case StatusByteSystemCommonSongPosition:
+                    return (.systemCommonSongPosition(lsb: d[0], msb: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case let b where b == 0xF3:
-                    return (.systemCommonSongSelect(song: data[0]), .parsing(bytes: bytes, index: i + 1))
+                case StatusByteSystemCommonSongSelect:
+                    return (.systemCommonSongSelect(song: d[0]), .parsing(bytes: bs, index: i + 1))
                     
                 default:
                     fatalError("Parser Error: parseDataByte was handed a status byte to parse (state: \(state).")
                 }
             }
             
-        case    .parsingDataTail(let bytes, let i, var data):
-            data.append(bytes[i])
-            return try parseMIDI(state: .parsingDataTail(bytes: bytes, index: i + 1, data: data))
+        case    .parsingDataTail(let bs, let i, var d):
+            d.append(bs[i])
+            return try parseMIDI(state: .parsingDataTail(bytes: bs, index: i + 1, data: d))
             
-        case    .parsingSystemExclusiveMessage(let bytes, let i, var data):
-            data.append(bytes[i])
-            return try parseMIDI(state: .parsingSystemExclusiveMessage(bytes: bytes, index: i + 1, data: data))
+        case    .parsingSystemExclusiveMessage(let bs, let i, var d):
+            d.append(bs[i])
+            return try parseMIDI(state: .parsingSystemExclusiveMessage(bytes: bs, index: i + 1, data: d))
             
-        case    .running(let bytes, let i, let statusByte):
+        case    .running(let bs, let i, let sB):
             
-            let data = Data([bytes[i]])
+            let d = Data([bs[i]])
             
-            let ch = Int((statusByte & 0x0F) + 1)
+            let ch = sB.channel
             
-            switch statusByte >> 4 {
+            switch sB.channelMessageStatusBits {
                 
-            case 0xC:
-                return (.voiceProgramChange(channel: ch, program: data[0]), .running(bytes: bytes, index: i + 1, statusByte: statusByte))
+            case    StatusByteProgramChange:
+                return (.voiceProgramChange(channel: ch, program: d[0]), .running(bytes: bs, index: i + 1, statusByte: sB))
                 
-            case 0xD:
-                return (.voiceChannelAftertouch(channel: ch, pressure: data[0]), .running(bytes: bytes, index: i + 1, statusByte: statusByte))
+            case    StatusByteChannelAftertouch:
+                return (.voiceChannelAftertouch(channel: ch, pressure: d[0]), .running(bytes: bs, index: i + 1, statusByte: sB))
                 
-            case 0x8, 0x9, 0xA, 0xB, 0xE:
-                return try parseMIDI(state: .parsingData(bytes: bytes, index: i + 1, statusByte: statusByte, data: data, expectedDataCount: 2, currentDataCount: 1))
+            case    StatusByteNoteOff,
+                    StatusByteNoteOn,
+                    StatusBytePolyphonicAftertouch,
+                    StatusByteControlChangeOrMode,
+                    StatusBytePitchBendChange:
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: sB, data: d, expectedDataCount: 2, currentDataCount: 1))
             default:
                 fatalError("Parser Error: parsDataByte was called in the .running state but with a non-channel message status byte (state: \(state)).")
             }
-            
         }
     }
 }
