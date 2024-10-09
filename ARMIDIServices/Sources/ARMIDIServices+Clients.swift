@@ -21,14 +21,14 @@ public func createClient(name: String, block: MIDINotifyBlock?) throws -> MIDICl
     return client
 }
 
-public func createInputPort(client: MIDIClientRef, name: String, context: UnsafeMutableRawPointer?, callback: @escaping MIDIReadProc) throws -> MIDIEndpointRef {
+public func createInputPort(client: MIDIClientRef, name: String, context: UnsafeMutableRawPointer?, callback: @escaping MIDIReadProc) throws -> MIDIPortRef {
     var port: MIDIPortRef = 0
     let status = MIDIInputPortCreate(client, name as CFString, callback, context, &port)
     guard status == 0 else { throw ARMIDIError(status) }
     return port
 }
 
-public func createInputPort(client: MIDIClientRef, name: String, block: @escaping MIDIReadBlock) throws -> MIDIEndpointRef {
+public func createInputPort(client: MIDIClientRef, name: String, block: @escaping MIDIReadBlock) throws -> MIDIPortRef {
     var port: MIDIPortRef = 0
     let status = MIDIInputPortCreateWithBlock(client, name as CFString, &port, block)
     guard status == 0 else { throw ARMIDIError(status) }
