@@ -91,12 +91,15 @@ public let kDX21ParamFootVolume                     = 67
 public let kDX21ParamSustainFootSwitch              = 68
 public let kDX21ParamPortamentoFootSwitch           = 69
 public let kDX21ParamChorusSwitch                   = 70
+
 public let kDX21ParamModWheelPitchModRange          = 71
 public let kDX21ParamModWheelAmplitudeModRange      = 72
+
 public let kDX21ParamBreathControlPitchModRange     = 73
 public let kDX21ParamBreathControlAmplitudeModRange = 74
 public let kDX21ParamBreathControlPitchBiasRange    = 75
 public let kDX21ParamBreathControlEGBiasRange       = 76
+
 public let kDX21ParamVoiceName0                     = 77
 public let kDX21ParamVoiceName1                     = 78
 public let kDX21ParamVoiceName2                     = 79
@@ -107,6 +110,7 @@ public let kDX21ParamVoiceName6                     = 83
 public let kDX21ParamVoiceName7                     = 84
 public let kDX21ParamVoiceName8                     = 85
 public let kDX21ParamVoiceName9                     = 86
+
 public let kDX21ParamPitchEGRate1                   = 87
 public let kDX21ParamPitchEGRate2                   = 88
 public let kDX21ParamPitchEGRate3                   = 89
@@ -116,6 +120,7 @@ public let kDX21ParamPitchEGLevel3                  = 92
 
 public let kDX21FunctionOperatorEnableDisable          = 93
 public let kDX21FunctionOperatorSelect                 = 94
+
 public let kDX21FunctionEditModeOn                     = 95
 public let kDX21FunctionFunctionModeOn                 = 96
 public let kDX21FunctionStoreModeOn                    = 97
@@ -125,6 +130,7 @@ public let kDX21FunctionPlaySingleModeOn               = 100
 public let kDX21FunctionDualModeDetune                 = 101
 public let kDX21FunctionSplitPoint                     = 102
 public let kDX21FunctionMasterTune                     = 103
+
 public let kDX21FunctionMIDISwitchOn                   = 104
 public let kDX21FunctionMIDIChannelInfo                = 105
 public let kDX21FunctionMIDIOmniOn                     = 106
@@ -134,6 +140,7 @@ public let kDX21FunctionMIDISystemInfo                 = 109
 public let kDX21FunctionMIDIBulkDump                   = 110
 public let kDX21FunctionMIDIEditRecall                 = 111
 public let kDX21FunctionMIDIInitVoice                  = 112
+
 public let kDX21FunctionMemoryProtectOn                = 119
 public let kDX21FunctionKeyShift                       = 120
 public let kDX21FunctionPitchBendModeOn                = 121

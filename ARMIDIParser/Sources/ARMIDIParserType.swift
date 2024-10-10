@@ -7,25 +7,32 @@
 
 public protocol ARMIDIParserType {
     
-    var currentState: ARMIDIParserState { get set }
+    var currentState: ARMIDIParserState? { get set }
     
-    func process(midiMessage: ARMIDIParserMessage?)
+    func process(midiMessage: ARMIDIParserMessage)
 }
 
 extension ARMIDIParserType {
     
     public mutating func handle(bytes: [UInt8]) throws {
         
-        self.currentState = self.currentState.addBytes(bytes)
+        self.currentState = self.currentState?.addBytes(bytes)
         
         var bytesLeft = !bytes.isEmpty
         
         while bytesLeft {
             
-            let (m, s) = try parseMIDI(state: self.currentState)
+            let (m, s) = try parseMIDI(state: self.currentState ?? ARMIDIParserState())
             
-            self.process(midiMessage: m)
-            self.currentState = s
+            if let m = m {
+                
+                self.process(midiMessage: m)
+                self.currentState = s.hasBytesLeft ? s : nil
+                
+            } else {
+                
+                self.currentState = s
+            }
             
             bytesLeft = s.hasBytesLeft
         }
