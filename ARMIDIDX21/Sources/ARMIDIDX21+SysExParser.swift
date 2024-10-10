@@ -28,7 +28,7 @@ public class ARMIDIDX21SysExParser: ARMIDIParserType {
                     case kDX21AllVoicesTxByteCount:
                         return .bulkAllVoices
                         
-                    case let n:
+                    default:
                         throw SysExError.invalidByteCount
                     }
                 }()
