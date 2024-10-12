@@ -7,6 +7,10 @@
 
 public class DX21Voice {
     
+    public var voiceName: String {
+        return String(data: data[kDX21ParamVoiceName0...kDX21ParamVoiceName9], encoding: .utf8) ?? ""
+    }
+    
     public var op1AttackRate: UInt8
     public var op1DecayRate1: UInt8
     public var op1DecayRate2: UInt8
@@ -105,7 +109,11 @@ public class DX21Voice {
     public var pitchEGLevel2: UInt8
     public var pitchEGLevel3: UInt8
     
+    public var data: Data
+    
     public init(singleVoiceData d: Data) {
+        
+        self.data = d
         
         self.op1AttackRate                  = d[kDX21ParamOp1AttackRate]
         self.op1DecayRate1                  = d[kDX21ParamOp1DecayRate1]
@@ -309,6 +317,114 @@ public class DX21Voice {
         d[kDX21ParamPitchEGLevel1]                      = data[70]
         d[kDX21ParamPitchEGLevel2]                      = data[71]
         d[kDX21ParamPitchEGLevel3]                      = data[72]
+        
+        self.init(singleVoiceData: d)
+    }
+    
+    public convenience init() {
+        
+        var d = Data(count: 93)
+        
+        d[kDX21ParamOp1AttackRate]              = 0
+        d[kDX21ParamOp1DecayRate1]              = 0
+        d[kDX21ParamOp1DecayRate2]              = 0
+        d[kDX21ParamOp1ReleaseRate]             = 0
+        d[kDX21ParamOp1DecayLevel1]             = 0
+        d[kDX21ParamOp1KeyboardScalingLevel]    = 0
+        d[kDX21ParamOp1KeyboardScalingRate]     = 0
+        d[kDX21ParamOp1EGBiasSensitivity]       = 0
+        d[kDX21ParamOp1AmplitudeModEnable]      = 0
+        d[kDX21ParamOp1KeyVelocity]             = 0
+        d[kDX21ParamOp1OutputLevel]             = 0
+        d[kDX21ParamOp1OscillatorFrequency]     = 0
+        d[kDX21ParamOp1Detune]                  = 0
+        
+        d[kDX21ParamOp2AttackRate]              = 0
+        d[kDX21ParamOp2DecayRate1]              = 0
+        d[kDX21ParamOp2DecayRate2]              = 0
+        d[kDX21ParamOp2ReleaseRate]             = 0
+        d[kDX21ParamOp2DecayLevel1]             = 0
+        d[kDX21ParamOp2KeyboardScalingLevel]    = 0
+        d[kDX21ParamOp2KeyboardScalingRate]     = 0
+        d[kDX21ParamOp2EGBiasSensitivity]       = 0
+        d[kDX21ParamOp2AmplitudeModEnable]      = 0
+        d[kDX21ParamOp2KeyVelocity]             = 0
+        d[kDX21ParamOp2OutputLevel]             = 0
+        d[kDX21ParamOp2OscillatorFrequency]     = 0
+        d[kDX21ParamOp2Detune]                  = 0
+        
+        d[kDX21ParamOp3AttackRate]              = 0
+        d[kDX21ParamOp3DecayRate1]              = 0
+        d[kDX21ParamOp3DecayRate2]              = 0
+        d[kDX21ParamOp3ReleaseRate]             = 0
+        d[kDX21ParamOp3DecayLevel1]             = 0
+        d[kDX21ParamOp3KeyboardScalingLevel]    = 0
+        d[kDX21ParamOp3KeyboardScalingRate]     = 0
+        d[kDX21ParamOp3EGBiasSensitivity]       = 0
+        d[kDX21ParamOp3AmplitudeModEnable]      = 0
+        d[kDX21ParamOp3KeyVelocity]             = 0
+        d[kDX21ParamOp3OutputLevel]             = 0
+        d[kDX21ParamOp3OscillatorFrequency]     = 0
+        d[kDX21ParamOp3Detune]                  = 0
+        
+        d[kDX21ParamOp4AttackRate]              = 0
+        d[kDX21ParamOp4DecayRate1]              = 0
+        d[kDX21ParamOp4DecayRate2]              = 0
+        d[kDX21ParamOp4ReleaseRate]             = 0
+        d[kDX21ParamOp4DecayLevel1]             = 0
+        d[kDX21ParamOp4KeyboardScalingLevel]    = 0
+        d[kDX21ParamOp4KeyboardScalingRate]     = 0
+        d[kDX21ParamOp4EGBiasSensitivity]       = 0
+        d[kDX21ParamOp4AmplitudeModEnable]      = 0
+        d[kDX21ParamOp4KeyVelocity]             = 0
+        d[kDX21ParamOp4OutputLevel]             = 0
+        d[kDX21ParamOp4OscillatorFrequency]     = 0
+        d[kDX21ParamOp4Detune]                  = 0
+        d[kDX21ParamAlgorithm]                  = 0
+        d[kDX21ParamFeedbackLevel]              = 0
+        d[kDX21ParamLFOSpeed]                   = 0
+        d[kDX21ParamLFODelay]                   = 0
+        d[kDX21ParamPitchModDepth]              = 0
+        d[kDX21ParamAmplitudeModDepth]          = 0
+        d[kDX21ParamLFOSync]                    = 0
+        d[kDX21ParamLFOWave]                    = 0
+        d[kDX21ParamPitchModSensitivity]        = 0
+        d[kDX21ParamAmplitudeModSensitivity]    = 0
+        d[kDX21ParamTranspose]                  = 0
+        d[kDX21ParamPolyOrMonoPlayMode]         = 0
+        d[kDX21ParamPitchBendRange]             = 0
+        d[kDX21ParamPortamentoMode]             = 0
+        d[kDX21ParamPortamentoTime]             = 0
+        d[kDX21ParamFootVolume]                 = 0
+        d[kDX21ParamSustainFootSwitch]          = 0
+        d[kDX21ParamPortamentoFootSwitch]       = 0
+        d[kDX21ParamChorusSwitch]               = 0
+        
+        d[kDX21ParamModWheelPitchModRange]              = 0
+        d[kDX21ParamModWheelAmplitudeModRange]          = 0
+        d[kDX21ParamBreathControlPitchModRange]         = 0
+        d[kDX21ParamBreathControlAmplitudeModRange]     = 0
+        d[kDX21ParamBreathControlPitchBiasRange]        = 0
+        d[kDX21ParamBreathControlEGBiasRange]           = 0
+        
+        d[kDX21ParamVoiceName0]                         = 0
+        d[kDX21ParamVoiceName1]                         = 0
+        d[kDX21ParamVoiceName2]                         = 0
+        d[kDX21ParamVoiceName3]                         = 0
+        d[kDX21ParamVoiceName4]                         = 0
+        d[kDX21ParamVoiceName5]                         = 0
+        d[kDX21ParamVoiceName6]                         = 0
+        d[kDX21ParamVoiceName7]                         = 0
+        d[kDX21ParamVoiceName8]                         = 0
+        d[kDX21ParamVoiceName9]                         = 0
+        
+        d[kDX21ParamPitchEGRate1]                       = 0
+        d[kDX21ParamPitchEGRate2]                       = 0
+        d[kDX21ParamPitchEGRate3]                       = 0
+        d[kDX21ParamPitchEGLevel1]                      = 0
+        d[kDX21ParamPitchEGLevel2]                      = 0
+        d[kDX21ParamPitchEGLevel3]                      = 0
+        
         
         self.init(singleVoiceData: d)
     }

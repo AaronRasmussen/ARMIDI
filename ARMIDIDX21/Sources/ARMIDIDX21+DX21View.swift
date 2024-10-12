@@ -9,5 +9,7 @@ import Cocoa
 
 public class DX21View: NSView {
     
+    @IBOutlet public var voiceName: NSTextField!
+    
 }
                             
