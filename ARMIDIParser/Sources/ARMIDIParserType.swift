@@ -16,13 +16,11 @@ extension ARMIDIParserType {
     
     public mutating func handle(bytes: [UInt8]) throws {
         
-        self.currentState = self.currentState?.addBytes(bytes)
-        
         var bytesLeft = !bytes.isEmpty
         
         while bytesLeft {
             
-            let (m, s) = try parseMIDI(state: self.currentState ?? ARMIDIParserState())
+            let (m, s) = try parseMIDI(state: (self.currentState ?? ARMIDIParserState()).addBytes(bytes))
             
             if let m = m {
                 

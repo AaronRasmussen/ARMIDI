@@ -7,7 +7,7 @@
 
 public class ARMIDIDX21SysExParser: ARMIDIParserType {
     
-    public var currentState: ARMIDIParserState? = ARMIDIParserState()
+    public var currentState: ARMIDIParserState? = nil
     
     public func process(midiMessage m: ARMIDIParserMessage) {
         
@@ -45,7 +45,7 @@ public class ARMIDIDX21SysExParser: ARMIDIParserType {
     }
     
     func checkSum(data d: Data) -> UInt8 {
-        let twosComplementSum = d[6..<99].reduce(Int(0), { sum, dataByte in
+        let twosComplementSum = d.reduce(Int(0), { sum, dataByte in
             sum + Int(~dataByte) + 1 })
         return UInt8(twosComplementSum & 0x7F)
     }

@@ -10,6 +10,6 @@ import Cocoa
 public class DX21ViewController: NSViewController {
     
     public override func loadView() {
-        
+        self.view = DX21View(frame: .init(x: 200, y: 120, width: 808, height: 600)).setup()
     }
 }
