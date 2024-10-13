@@ -1,5 +1,5 @@
 //
-//  ARMIDIDX21+DX21View.swift
+//  ARMIDIDX21+View.swift
 //  ARMIDI
 //
 //  Created by Aaron Rasmussen on 10/9/24.

@@ -1,5 +1,5 @@
 //
-//  ARMIDIDX21+DX21VewController.swift
+//  ARMIDIDX21+ViewController.swift
 //  ARMIDI
 //
 //  Created by Aaron Rasmussen on 10/11/24.
