@@ -71,7 +71,7 @@ public class DX21ViewController: NSViewController {
     public var LFODelay = NSTextField()
     public var pitchModDepth = NSTextField()
     public var amplitudeModDepth = NSTextField()
-    public var LFOSync = NSTextField()
+    public var LFOSync = NSButton()
     public var LFOWave = NSTextField()
     public var pitchModSensitivity = NSTextField()
     public var amplitudeModSensitivity = NSTextField()
