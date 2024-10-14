@@ -12,9 +12,8 @@ public class DX21Window: NSWindow {
     var vc = DX21ViewController()
     
     public init() {
-        let rect = CGRect(x: 200, y: 120, width: 808, height: 600)
         let mask: NSWindow.StyleMask = [.closable, .titled, .fullSizeContentView]
-        super.init(contentRect: rect, styleMask: mask, backing: .buffered, defer: false)
+        super.init(contentRect: NSRect(origin: CGPoint(x: 240, y: 180), size: .zero), styleMask: mask, backing: .buffered, defer: false)
         self.contentViewController = vc
     }
 }
