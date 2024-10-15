@@ -9,6 +9,8 @@ public class ARMIDIDX21SysExParser: ARMIDIParserType {
     
     public var currentState: ARMIDIParserState? = nil
     
+    weak var midiManager: DX21MIDIManager? = nil
+    
     public func process(midiMessage m: ARMIDIParserMessage) {
         
         switch m {

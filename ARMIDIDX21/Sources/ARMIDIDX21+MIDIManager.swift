@@ -26,30 +26,18 @@ public class DX21MIDIManager {
     
     var parser = ARMIDIDX21SysExParser()
     
-    lazy var scarlettMIDIDevice: ARMIDIDevice = {
-        let devs = try! ARMIDIDevice.devices()
-        guard let dev = devs.first(where: {
-            try! $0.manufacturer() == "Focusrite"
-        }) else { fatalError()}
+    var midiSource: ARMIDISource? = nil
+    var midiDestination: ARMIDIDestination? = nil
+    var virtualClient: ARMIDIClient? = nil
+    var inputPort: ARMIDIPort? = nil
+    
+    public init() {
+        self.parser.midiManager = self
+        let midiSources = try? ARMIDI.sources().map( { (ref: UInt32) throws -> ARMIDISource?	13RW in
+            try! ARMIDISource(midiRef: ref) })567uyhgnv  BJUI897050560
+            }
         
-        return dev
-    }()
-    
-    lazy var midiSource: ARMIDISource = try! (scarlettMIDIDevice.entityAtIndex(0) as ARMIDIEntity).sourceAtIndex(0)
-    
-    lazy var midiDestination: ARMIDIDestination = try! (scarlettMIDIDevice.entityAtIndex(0) as ARMIDIEntity).destinationAtIndex(0)
-    
-    lazy var virtualClient = try! ARMIDIClient.createClient(name: "DX21_MIDI_Manager_Client", block: nil)
-    
-    lazy var inputPort: ARMIDIPort = {
-        let port: ARMIDIPort = try! virtualClient.createInputPort(name: "DX21_MIDI_Manager_InputPort", block: readBlock)
-        let _ = withUnsafeMutablePointer(to: &self.parser) { ptr in
-            try! port.connectToSource(midiSource, withContext: ptr)
-        }
-        return port
-    }()
-    
-    public init() { }
+    }
     
     func createSysexSwitchMessageData(channel ch: UInt8, switch s: UInt8, isOn: Bool) -> [UInt8] {
         
