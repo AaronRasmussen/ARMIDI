@@ -5,16 +5,16 @@
 //  Created by Aaron Rasmussen on 10/8/24.
 //
 
-public let kYamahaSysExID                       = 0x43      // 67
-public let kDX21ParamGroupNumber                = 0x12      // 18
+public let kYamahaSysExID: UInt8                = 0x43      // 67
+public let kDX21ParamGroupNumber: UInt8         = 0x12      // 18
+public let kDX21SingleVoiceBulkFormat: UInt8    = 0x03      // 3
+public let kDX21AllVoicesBulkFormat: UInt8      = 0x04      // 4
 public let kDX21ParamChangeTxByteCount          = 0x07      // 7
 public let kDX21ParamChangeDataByteCount        = 0x02      // 2
 public let kDX21SingleVoiceTxByteCount          = 0x65      // 101
 public let kDX21SingleVoiceDataByteCount        = 0x5D      // 93
 public let kDX21AllVoicesTxByteCount            = 0x2008    // 4,104
 public let kDX21AllVoicesDataByteCount          = 0x2000    // 4,096
-public let kDX21SingleVoiceBulkFormat           = 0x03      // 3
-public let kDX21AllVoicesBulkFormat             = 0x04      // 4
 
 public let kDX21ParamOp1AttackRate                  = 0
 public let kDX21ParamOp1DecayRate1                  = 1
