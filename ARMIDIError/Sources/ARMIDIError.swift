@@ -26,7 +26,7 @@ public enum ARMIDIError: Error, CustomStringConvertible {
     case unknownError
     case undefined(OSStatus)
     
-    init(_ status: OSStatus) {
+    public init(_ status: OSStatus) {
         switch status {
         case kMIDIInvalidClient:
             self = .invalidClient
