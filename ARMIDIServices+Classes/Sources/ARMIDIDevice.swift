@@ -17,11 +17,8 @@ public class ARMIDIDevice: ARMIDIObject, ARMIDIDeviceType {
         return try ARMIDI.externalDevices().map { try ARMIDIExternalDevice(midiRef: $0) }
     }
     
-    public var entities: [ARMIDIEntity]? = nil
-    
     public required convenience init(midiRef: MIDIObjectRef) throws {
         try self.init(midiRef: midiRef, objectType: .device)
-        self.entities = try ARMIDI.entitiesForDevice(self.midiRef).map { try ARMIDIEntity(midiRef: $0) }
     }
     
     override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
@@ -33,6 +30,5 @@ public class ARMIDIExternalDevice: ARMIDIDevice {
     
     public required init(midiRef: MIDIObjectRef) throws {
         try super.init(midiRef: midiRef, objectType: .externalDevice)
-        self.entities = try ARMIDI.entitiesForDevice(self.midiRef).map { try ARMIDIExternalEntity(midiRef: $0) }
     }
 }
