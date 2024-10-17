@@ -7,7 +7,7 @@
 
 import CoreMIDI
 
-public func findObect(withUniqueID uID: MIDIUniqueID) throws -> (MIDIObjectRef, MIDIObjectType) {
+public func findObject(withUniqueID uID: MIDIUniqueID) throws -> (MIDIObjectRef, MIDIObjectType) {
     var midiRef: MIDIObjectRef = 0
     var objectType: MIDIObjectType = .other
     let status = MIDIObjectFindByUniqueID(uID, &midiRef, &objectType)
