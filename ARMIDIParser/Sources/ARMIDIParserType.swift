@@ -24,6 +24,7 @@ extension ARMIDIParserType {
             
             if let m = m {
                 self.process(midiMessage: m)
+                print(m, s1)
             }
             s0 = s1
         }
