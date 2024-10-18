@@ -24,6 +24,14 @@ public class ARMIDIDevice: ARMIDIObject, ARMIDIDeviceType {
     override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
         try super.init(midiRef: midiRef, objectType: objectType)
     }
+    
+    public func entity(atIndex i: Int) throws -> ARMIDIEntity {
+        return try ARMIDIEntity(midiRef: ARMIDI.entity(forDevice: self.midiRef, atIndex: i))
+    }
+    
+    public func entities() throws -> [ARMIDIEntity] {
+        return try ARMIDI.entities(forDevice: self.midiRef).map { try ARMIDIEntity(midiRef: $0) }
+    }
 }
 
 public class ARMIDIExternalDevice: ARMIDIDevice {
