@@ -100,15 +100,15 @@ extension ARMIDIParserType {
         
             switch byte {
                 
-            case StatusByteSystemRealTimeTimingClock:    return .systemRealTimeTimingClock
-            case StatusByteSystemRealTimeStart:          return .systemRealTimeStart
-            case StatusByteSystemRealTimeContinue:       return .systemRealTimeContinue
-            case StatusByteSystemRealTimeStop:           return .systemRealTimeStop
-            case StatusByteSystemRealTimeActiveSensing:  return .systemRealTimeActiveSensing
-            case StatusByteSystemRealTimeSystemReset:    return .systemRealTimeSystemReset
+            case kStatusByteSystemRealTimeTimingClock:    return .systemRealTimeTimingClock
+            case kStatusByteSystemRealTimeStart:          return .systemRealTimeStart
+            case kStatusByteSystemRealTimeContinue:       return .systemRealTimeContinue
+            case kStatusByteSystemRealTimeStop:           return .systemRealTimeStop
+            case kStatusByteSystemRealTimeActiveSensing:  return .systemRealTimeActiveSensing
+            case kStatusByteSystemRealTimeSystemReset:    return .systemRealTimeSystemReset
                 
-            case StatusByteSystemRealTimeUndefined_0xF9: throw ARMIDIParserError.undefinedSystemRealTimeStatusByte0xF9
-            case StatusByteSystemRealTimeUndefined_0xFD: throw ARMIDIParserError.undefinedSystemRealTimeStatusByte0xFD
+            case kStatusByteSystemRealTimeUndefined_0xF9: throw ARMIDIParserError.undefinedSystemRealTimeStatusByte0xF9
+            case kStatusByteSystemRealTimeUndefined_0xFD: throw ARMIDIParserError.undefinedSystemRealTimeStatusByte0xFD
                 
             default:
                 fatalError("Parser Error: parseSystemRealTimeMessage was handed a non-Real Time system status byte (byte: \(byte))")
@@ -141,33 +141,33 @@ extension ARMIDIParserType {
             
             switch bs[i] {
             
-            case StatusByteSystemCommonMIDITimeCode:
-                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: StatusByteSystemCommonMIDITimeCode, data: Data(), expectedDataCount: 1, currentDataCount: 0))
+            case kStatusByteSystemCommonMIDITimeCode:
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: kStatusByteSystemCommonMIDITimeCode, data: Data(), expectedDataCount: 1, currentDataCount: 0))
                 
-            case StatusByteSystemCommonSongPosition:
-                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: StatusByteSystemCommonSongPosition, data: Data(), expectedDataCount: 2, currentDataCount: 0))
+            case kStatusByteSystemCommonSongPosition:
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: kStatusByteSystemCommonSongPosition, data: Data(), expectedDataCount: 2, currentDataCount: 0))
             
-            case StatusByteSystemCommonSongSelect:
-                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: StatusByteSystemCommonSongSelect, data: Data(), expectedDataCount: 1, currentDataCount: 0))
+            case kStatusByteSystemCommonSongSelect:
+                return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: kStatusByteSystemCommonSongSelect, data: Data(), expectedDataCount: 1, currentDataCount: 0))
                 
-            case StatusByteSystemCommonUndefined_0xF4:
+            case kStatusByteSystemCommonUndefined_0xF4:
                 throw ARMIDIParserError.undefinedSystemCommonStatusByte0xF4
                 
-            case StatusByteSystemCommonUndefined_0xF5:
+            case kStatusByteSystemCommonUndefined_0xF5:
                 throw ARMIDIParserError.undefinedSystemCommonStatusByte0xF5
                 
-            case StatusByteSystemCommonTuneRequest:
+            case kStatusByteSystemCommonTuneRequest:
                 return (.systemCommonTuneRequest, .parsing(bytes: bs, index: i + 1))
                 
-            case StatusByteSystemCommonEOX:
-                return (.unassociatedDataTail(Data([StatusByteSystemCommonEOX])), .parsing(bytes: bs, index: i + 1))
+            case kStatusByteSystemCommonEOX:
+                return (.unassociatedDataTail(Data([kStatusByteSystemCommonEOX])), .parsing(bytes: bs, index: i + 1))
                 
             default:
                 fatalError("Parser Error: parseSystemCommonMessage was called with a non-system common status byte (byte: \(bs[i])).")
             }
             
         case    .parsingSystemExclusiveMessage(let bs, let i, var d):
-            switch bs[i] == StatusByteSystemCommonEOX {
+            switch bs[i] == kStatusByteSystemCommonEOX {
             
             case true:
                 d.append(bs[i])
@@ -213,15 +213,15 @@ extension ARMIDIParserType {
             
             switch bs[i].channelMessageStatusBits {
                 
-            case    StatusByteProgramChange,
-                    StatusByteChannelAftertouch:
+            case    kStatusByteProgramChange,
+                    kStatusByteChannelAftertouch:
                 return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: bs[i], data: Data(), expectedDataCount: 1, currentDataCount: 0))
                 
-            case    StatusByteNoteOff,
-                    StatusByteNoteOn,
-                    StatusBytePolyphonicAftertouch,
-                    StatusByteControlChangeOrMode,
-                    StatusBytePitchBendChange:
+            case    kStatusByteNoteOff,
+                    kStatusByteNoteOn,
+                    kStatusBytePolyphonicAftertouch,
+                    kStatusByteControlChangeOrMode,
+                    kStatusBytePitchBendChange:
                 return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: bs[i], data: Data(), expectedDataCount: 2, currentDataCount: 0))
                 
             case let b:
@@ -263,66 +263,66 @@ extension ARMIDIParserType {
                 
                 switch sB.channelMessageStatusBits {
                     
-                case StatusByteNoteOff:
+                case kStatusByteNoteOff:
                     return (.voiceNoteOff(channel: ch, note: d[0], velocity: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case StatusByteNoteOn:
+                case kStatusByteNoteOn:
                     return (.voiceNoteOn(channel: ch, note: d[0], velocity: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case StatusBytePolyphonicAftertouch:
+                case kStatusBytePolyphonicAftertouch:
                     return (.voicePolyphonicAftertouch(channel: ch, note: d[0], pressure: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case StatusByteControlChangeOrMode:
+                case kStatusByteControlChangeOrMode:
                     
                     switch d[0] {
                         
-                    case let b where b < DataByteModeAllSoundsOff:
+                    case let b where b < kDataByteModeAllSoundsOff:
                         return (.voiceControlChange(channel: ch, controlNumber: d[0], value: d[1]), .parsing(bytes: bs, index: i + 1))
                         
-                    case DataByteModeAllSoundsOff:
+                    case kDataByteModeAllSoundsOff:
                         return (.modeAllSoundOff(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case DataByteModeResetAllControllers:
+                    case kDataByteModeResetAllControllers:
                         return (.modeResetAllControllers(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case DataByteModeLocalControl:
+                    case kDataByteModeLocalControl:
                         return (.modeLocalControl(ch: ch, on: d[1] == 0 ? false : true), .parsing(bytes: bs, index: i + 1))
                         
-                    case DataByteModeAllNotesOff:
+                    case kDataByteModeAllNotesOff:
                         return (.modeAllNotesOff(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case DataByteModeOmniModeOff:
+                    case kDataByteModeOmniModeOff:
                         return (.modeOmniModeOff(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case DataByteModeOmniModeOn:
+                    case kDataByteModeOmniModeOn:
                         return (.modeOmniModeOn(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
-                    case DataByteModeMonoModeOn:
+                    case kDataByteModeMonoModeOn:
                         return (.modeMonoModeOn(ch: ch, numberOfChannels: d[1]), .parsing(bytes: bs, index: i + 1))
                         
-                    case DataByteModePolyModeOn:
+                    case kDataByteModePolyModeOn:
                         return (.modePolyModeOn(ch: ch), .parsing(bytes: bs, index: i + 1))
                         
                     case let b:
                         fatalError("Parser Error: unexpected data byte (\(String(format: "%X", b)) discovered in the data during a call to parseDataByte (state: \(state)).")
                     }
                     
-                case StatusByteProgramChange:
+                case kStatusByteProgramChange:
                     return (.voiceProgramChange(channel: ch, program: d[0]), .parsing(bytes: bs, index: i + 1))
                     
-                case StatusByteChannelAftertouch:
+                case kStatusByteChannelAftertouch:
                     return (.voiceChannelAftertouch(channel: ch, pressure: d[0]), .parsing(bytes: bs, index: i + 1))
                     
-                case StatusBytePitchBendChange:
+                case kStatusBytePitchBendChange:
                     return (.voicePitchBendChange(ch: ch, msb: d[0], lsb: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case StatusByteSystemCommonMIDITimeCode:
+                case kStatusByteSystemCommonMIDITimeCode:
                     return (.systemCommonMIDITimeCode(timeCode: d[0]), .parsing(bytes: bs, index: i + 1))
                     
-                case StatusByteSystemCommonSongPosition:
+                case kStatusByteSystemCommonSongPosition:
                     return (.systemCommonSongPosition(lsb: d[0], msb: d[1]), .parsing(bytes: bs, index: i + 1))
                     
-                case StatusByteSystemCommonSongSelect:
+                case kStatusByteSystemCommonSongSelect:
                     return (.systemCommonSongSelect(song: d[0]), .parsing(bytes: bs, index: i + 1))
                     
                 default:
@@ -346,17 +346,17 @@ extension ARMIDIParserType {
             
             switch sB.channelMessageStatusBits {
                 
-            case    StatusByteProgramChange:
+            case    kStatusByteProgramChange:
                 return (.voiceProgramChange(channel: ch, program: d[0]), .running(bytes: bs, index: i + 1, statusByte: sB))
                 
-            case    StatusByteChannelAftertouch:
+            case    kStatusByteChannelAftertouch:
                 return (.voiceChannelAftertouch(channel: ch, pressure: d[0]), .running(bytes: bs, index: i + 1, statusByte: sB))
                 
-            case    StatusByteNoteOff,
-                    StatusByteNoteOn,
-                    StatusBytePolyphonicAftertouch,
-                    StatusByteControlChangeOrMode,
-                    StatusBytePitchBendChange:
+            case    kStatusByteNoteOff,
+                    kStatusByteNoteOn,
+                    kStatusBytePolyphonicAftertouch,
+                    kStatusByteControlChangeOrMode,
+                    kStatusBytePitchBendChange:
                 return try parseMIDI(state: .parsingData(bytes: bs, index: i + 1, statusByte: sB, data: d, expectedDataCount: 2, currentDataCount: 1))
             default:
                 fatalError("Parser Error: parsDataByte was called in the .running state but with a non-channel message status byte (state: \(state)).")
