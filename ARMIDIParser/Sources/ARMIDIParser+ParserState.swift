@@ -64,8 +64,8 @@ public enum ARMIDIParserState: CustomStringConvertible {
         case .parsing(let bs, let i):
             return "State: .parsing (\(bs.count) bytes, index \(i)) \nBytes: \(bs)"
             
-        case .parsingData(let bs, let i, let sB, let d, let eBC, let cBC):
-            return "State: .parsingData (\(bs.count) bytes, index \(i); status byte: \(sB); expected byte count \(eBC); current byte count \(cBC)) \nBytes: \(bs)"
+        case .parsingData(let bs, let i, let sB, let d, let eDC, let cDC):
+            return "State: .parsingData (\(bs.count) bytes, index \(i); status byte: \(sB); expected data count \(eDC); current data count \(cDC); data: \(d)) \nBytes: \(bs)"
             
         case .parsingSystemExclusiveMessage(let bs, let i, let d):
             return "State: .parsingSystemExclusiveMessage (\(bs.count) bytes, index \(i); data count: \(d.count); data: \(d)) \nBytes: \(bs)"

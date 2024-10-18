@@ -16,7 +16,7 @@ extension ARMIDIParserType {
     
     public mutating func handle(bytes: [UInt8]) throws {
         
-        var s0 = self.currentState?.addBytes(bytes) ?? .parsing(bytes: Data(bytes), index: 0)
+        var s0 = self.currentState?.addBytes(bytes) ?? ARMIDIParserState().addBytes(bytes)
         
         while s0.hasBytesLeft {
             
@@ -24,7 +24,6 @@ extension ARMIDIParserType {
             
             if let m = m {
                 self.process(midiMessage: m)
-                print(m, s1)
             }
             s0 = s1
         }
