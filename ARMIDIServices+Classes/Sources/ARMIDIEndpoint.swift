@@ -9,8 +9,6 @@ import CoreMIDI
 
 public class ARMIDISource: ARMIDIObject, ARMIDIEndpointType {
     
-    public weak var entity: ARMIDIEntity? = nil
-    
     public required convenience init(midiRef: MIDIObjectRef) throws {
         try self.init(midiRef: midiRef, objectType: .source)
     }
@@ -28,8 +26,6 @@ public class ARMIDIExternalSource: ARMIDISource {
 }
 
 public class ARMIDIDestination: ARMIDIObject, ARMIDIEndpointType {
-    
-    public var entity: ARMIDIEntity? = nil
     
     public required convenience init(midiRef: MIDIObjectRef) throws {
         try self.init(midiRef: midiRef, objectType: .source)
