@@ -15,8 +15,8 @@ public class ARMIDIEntity: ARMIDIObject, ARMIDIEntityType {
     
     public required convenience init(midiRef: MIDIObjectRef) throws {
         try self.init(midiRef: midiRef, objectType: .entity)
-        self.sources = try ARMIDI.sourcesForEntity(self.midiRef).map { try ARMIDISource(midiRef: $0) }
-        self.destinations = try ARMIDI.destinationsForEntity(self.midiRef).map { try ARMIDIDestination(midiRef: $0) }
+        self.sources = try ARMIDI.sources(forEntity: self.midiRef).map { try ARMIDISource(midiRef: $0) }
+        self.destinations = try ARMIDI.destinations(forEntity: self.midiRef).map { try ARMIDIDestination(midiRef: $0) }
     }
     
     override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
@@ -33,7 +33,7 @@ public class ARMIDIExternalEntity: ARMIDIEntity {
     
     public required convenience init(midiRef: MIDIObjectRef) throws {
         try self.init(midiRef: midiRef, objectType: .externalEntity)
-        self.sources = try ARMIDI.sourcesForEntity(self.midiRef).map { try ARMIDIExternalSource(midiRef: $0) }
-        self.destinations = try ARMIDI.destinationsForEntity(self.midiRef).map { try ARMIDIExternalDestination(midiRef: $0) }
+        self.sources = try ARMIDI.sources(forEntity: self.midiRef).map { try ARMIDIExternalSource(midiRef: $0) }
+        self.destinations = try ARMIDI.destinations(forEntity: self.midiRef).map { try ARMIDIExternalDestination(midiRef: $0) }
     }
 }

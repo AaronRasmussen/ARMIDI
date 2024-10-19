@@ -27,11 +27,11 @@ public extension ARMIDIEntityType {
     }
     
     func numberOfSources() -> Int {
-        return numberOfSourcesForEntity(self.midiRef)
+        return ARMIDI.numberOfSources(forEntity: self.midiRef)
     }
     
     func sourceAtIndex<T: ARMIDIEndpointType>(_ index: Int) throws -> T {
-        return try T(midiRef: sourceAtIndexForEntity(self.midiRef, index: index))
+        return try T(midiRef: source(forEntity: self.midiRef, atIndex: index))
     }
     
     func getSources<T: ARMIDIEndpointType>() throws -> [T] {
@@ -39,11 +39,11 @@ public extension ARMIDIEntityType {
     }
     
     func numberOfDestinations() -> Int {
-        return numberOfDestinationsForEntity(self.midiRef)
+        return ARMIDI.numberOfDestinations(forEntity: self.midiRef)
     }
     
     func destinationAtIndex<T: ARMIDIEndpointType>(_ index: Int) throws -> T {
-        return try T(midiRef: destinationAtIndexForEntity(self.midiRef, index: index))
+        return try T(midiRef: destination(forEntity: self.midiRef, atIndex: index))
     }
     
     func getDestinations<T: ARMIDIEndpointType>() throws -> [T] {

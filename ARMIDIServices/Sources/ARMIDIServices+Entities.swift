@@ -7,37 +7,37 @@
 
 import CoreMIDI
 
-public func deviceForEntity(_ entity: MIDIEntityRef) throws -> MIDIDeviceRef {
+public func device(forEntity e: MIDIEntityRef) throws -> MIDIDeviceRef {
     var device: MIDIDeviceRef = 0
-    let status = MIDIEntityGetDevice(entity, &device)
+    let status = MIDIEntityGetDevice(e, &device)
     guard status == 0 else { throw ARMIDIError(status) }
     return device
 }
 
-public func numberOfSourcesForEntity(_ entity: MIDIEntityRef) -> Int {
-    return MIDIEntityGetNumberOfSources(entity)
+public func numberOfSources(forEntity e: MIDIEntityRef) -> Int {
+    return MIDIEntityGetNumberOfSources(e)
 }
 
-public func sourceAtIndexForEntity(_ entity: MIDIEntityRef, index: Int) -> MIDIEndpointRef {
-    return MIDIEntityGetSource(entity, index)
+public func source(forEntity e: MIDIEntityRef, atIndex i: Int) -> MIDIEndpointRef {
+    return MIDIEntityGetSource(e, i)
 }
 
-public func sourcesForEntity(_ entity: MIDIEntityRef) -> [MIDIEndpointRef] {
-    return (0..<numberOfSourcesForEntity(entity)).map {
-        return sourceAtIndexForEntity(entity, index: $0)
+public func sources(forEntity e: MIDIEntityRef) -> [MIDIEndpointRef] {
+    return (0..<numberOfSources(forEntity: e)).map {
+        return source(forEntity: e, atIndex: $0)
     }
 }
 
-public func numberOfDestinationsForEntity(_ entity: MIDIEntityRef) -> Int {
-    return MIDIEntityGetNumberOfDestinations(entity)
+public func numberOfDestinations(forEntity e: MIDIEntityRef) -> Int {
+    return MIDIEntityGetNumberOfDestinations(e)
 }
 
-public func destinationAtIndexForEntity(_ entity: MIDIEndpointRef, index: Int) -> MIDIEndpointRef {
-    return MIDIEntityGetDestination(entity, index)
+public func destination(forEntity e: MIDIEndpointRef, atIndex i: Int) -> MIDIEndpointRef {
+    return MIDIEntityGetDestination(e, i)
 }
 
-public func destinationsForEntity(_ entity: MIDIEntityRef) -> [MIDIEndpointRef] {
-    return (0..<numberOfDestinationsForEntity(entity)).map {
-        destinationAtIndexForEntity(entity, index: $0)
+public func destinations(forEntity e: MIDIEntityRef) -> [MIDIEndpointRef] {
+    return (0..<numberOfDestinations(forEntity: e)).map {
+        destination(forEntity: e, atIndex: $0)
     }
 }

@@ -20,10 +20,10 @@ public protocol ARMIDIPortType {
 public extension ARMIDIPortType {
     
     func connectToSource<T: ARMIDIEndpointType>(_ source: T, withContext context: UnsafeMutableRawPointer?) throws {
-        return try connectPort(self.midiRef, toSource: source.midiRef, withContext: context)
+        return try connect(port: self.midiRef, toSource: source.midiRef, withContext: context)
     }
     
     func disconnectFromSource<T: ARMIDIEndpointType>(_ source: T) throws {
-        return try disconnectPort(self.midiRef, fromSource: source.midiRef)
+        return try disconnect(port: self.midiRef, fromSource: source.midiRef)
     }
 }
