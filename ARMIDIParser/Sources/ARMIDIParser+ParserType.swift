@@ -14,7 +14,7 @@ public protocol ARMIDIParserType {
 
 extension ARMIDIParserType {
     
-    public mutating func handle(bytes: [UInt8]) throws {
+    public mutating func parse(bytes: [UInt8]) throws {
         
         var s0 = self.currentState?.addBytes(bytes) ?? ARMIDIParserState().addBytes(bytes)
         
