@@ -27,7 +27,7 @@ public class ARMIDIClient: ARMIDIClientType {
     }
     
     public func name() throws -> String? {
-        return try getStringPropertyForObject(self.midiRef, property: kMIDIPropertyName)
+        return try ARMIDI.getStringProperty(forObject: self.midiRef, property: kMIDIPropertyName)
     }
     
     public func setModelForSourceAtIndex(_ index: Int, newValue value: String) throws {
