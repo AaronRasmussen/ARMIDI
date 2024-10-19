@@ -21,7 +21,7 @@ public class ARMIDIEntity: ARMIDIObject, ARMIDIEntityType {
     
     override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
         try super.init(midiRef: midiRef, objectType: objectType)
-        self.device = try self.getDevice()
+        self.device = try self.device()
     }
 }
 
