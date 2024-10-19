@@ -16,6 +16,10 @@ public class ARMIDISource: ARMIDIObject, ARMIDIEndpointType {
     override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
         try super.init(midiRef: midiRef, objectType: objectType)
     }
+    
+    func entity() throws -> ARMIDIEntity {
+        return try ARMIDIEntity(midiRef: ARMIDI.entity(forEndpoint: self.midiRef))
+    }
 }
 
 public class ARMIDIExternalSource: ARMIDISource {
@@ -33,6 +37,10 @@ public class ARMIDIDestination: ARMIDIObject, ARMIDIEndpointType {
     
     override init(midiRef: MIDIObjectRef, objectType: MIDIObjectType) throws {
         try super.init(midiRef: midiRef, objectType: objectType)
+    }
+    
+    func entity() throws -> ARMIDIEntity {
+        return try ARMIDIEntity(midiRef: ARMIDI.entity(forEndpoint: self.midiRef))
     }
 }
 
