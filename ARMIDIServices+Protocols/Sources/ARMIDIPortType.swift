@@ -13,17 +13,17 @@ public protocol ARMIDIPortType {
     
     init(midiRef: MIDIPortRef)
     
-    func connectToSource<T: ARMIDIEndpointType>(_ source: T, withContext context: UnsafeMutableRawPointer?) throws
-    func disconnectFromSource<T: ARMIDIEndpointType>(_ source: T) throws
+    func connect<T: ARMIDIEndpointType>(toSource: T, context: UnsafeMutableRawPointer?) throws
+    func disconnect<T: ARMIDIEndpointType>(fromSource: T) throws
 }
 
 public extension ARMIDIPortType {
     
-    func connectToSource<T: ARMIDIEndpointType>(_ source: T, withContext context: UnsafeMutableRawPointer?) throws {
-        return try connect(port: self.midiRef, toSource: source.midiRef, withContext: context)
+    func connect<T: ARMIDIEndpointType>(toSource s: T, context c: UnsafeMutableRawPointer?) throws {
+        return try ARMIDI.connect(port: self.midiRef, toSource: s.midiRef, context: c)
     }
     
-    func disconnectFromSource<T: ARMIDIEndpointType>(_ source: T) throws {
-        return try disconnect(port: self.midiRef, fromSource: source.midiRef)
+    func disconnect<T: ARMIDIEndpointType>(fromSource s: T) throws {
+        return try ARMIDI.disconnect(port: self.midiRef, fromSource: s.midiRef)
     }
 }

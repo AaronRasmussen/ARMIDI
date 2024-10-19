@@ -7,7 +7,7 @@
 
 import CoreMIDI
 
-public func connect(port p: MIDIPortRef, toSource s: MIDIEndpointRef, withContext c: UnsafeMutableRawPointer?) throws {
+public func connect(port p: MIDIPortRef, toSource s: MIDIEndpointRef, context c: UnsafeMutableRawPointer?) throws {
     let status = MIDIPortConnectSource(p, s, c)
     guard status == 0 else { throw ARMIDIError(status) }
     return
