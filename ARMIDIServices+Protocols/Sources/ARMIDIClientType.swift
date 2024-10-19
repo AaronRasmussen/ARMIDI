@@ -27,42 +27,42 @@ public protocol ARMIDIClientType: ARMIDIObjectType {
 
 public extension ARMIDIClientType {
     
-    func createInputPort<T: ARMIDIPortType>(name: String, context: UnsafeMutableRawPointer?, callback: @escaping MIDIReadProc) throws -> T {
-        return T(midiRef: try ARMIDI.createInputPort(client: self.midiRef, name: name, context: context, callback: callback))
+    func createInputPort<T: ARMIDIPortType>(name n: String, context c: UnsafeMutableRawPointer?, callback cb: @escaping MIDIReadProc) throws -> T {
+        return T(midiRef: try ARMIDI.createInputPort(client: self.midiRef, name: n, context: c, callback: cb))
     }
     
-    func createInputPort<T: ARMIDIPortType>(name: String, block: @escaping MIDIReadBlock) throws -> T {
-        return T(midiRef: try ARMIDI.createInputPort(client: self.midiRef, name: name, block: block))
-    }
-    
-    @available(macOS 11.0, *)
-    func createInputPort<T: ARMIDIPortType>(name: String, midiProtocol: MIDIProtocolID, block: @escaping MIDIReceiveBlock) throws -> T {
-        return T(midiRef: try ARMIDI.createInputPort(client: self.midiRef, name: name, midiProtocol: midiProtocol, block: block))
-    }
-    
-    func createOutputPort<T: ARMIDIPortType>(name: String) throws -> T {
-        return T(midiRef: try ARMIDI.createOutputPort(client: self.midiRef, name: name))
-    }
-    
-    func createVirtualSource<T: ARMIDIEndpointType>(name: String) throws -> T {
-        return try T(midiRef: ARMIDI.createVirtualSource(client: self.midiRef, name: name))
+    func createInputPort<T: ARMIDIPortType>(name n: String, block b: @escaping MIDIReadBlock) throws -> T {
+        return T(midiRef: try ARMIDI.createInputPort(client: self.midiRef, name: n, block: b))
     }
     
     @available(macOS 11.0, *)
-    func createVirtualSource<T: ARMIDIEndpointType>(name: String, midiProtocol: MIDIProtocolID) throws -> T {
-        return try T(midiRef: try ARMIDI.createVirtualSource(client: self.midiRef, name: name, midiProtocol: midiProtocol))
+    func createInputPort<T: ARMIDIPortType>(name n: String, midiProtocol p: MIDIProtocolID, block b: @escaping MIDIReceiveBlock) throws -> T {
+        return T(midiRef: try ARMIDI.createInputPort(client: self.midiRef, name: n, midiProtocol: p, block: b))
     }
     
-    func createVirtualDestination<T: ARMIDIEndpointType>(name: String, context: UnsafeMutableRawPointer?, callback: @escaping MIDIReadProc) throws -> T {
-        return try T(midiRef: try ARMIDI.createVirtualDestination(client: self.midiRef, name: name, context: context, callback: callback))
+    func createOutputPort<T: ARMIDIPortType>(name n: String) throws -> T {
+        return T(midiRef: try ARMIDI.createOutputPort(client: self.midiRef, name: n))
     }
     
-    func createVirtualDestination<T: ARMIDIEndpointType>(name: String, block: @escaping MIDIReadBlock) throws -> T {
-        return try T(midiRef: try ARMIDI.createVirtualDestination(client: self.midiRef, name: name, block: block))
+    func createVirtualSource<T: ARMIDIEndpointType>(name n: String) throws -> T {
+        return try T(midiRef: ARMIDI.createVirtualSource(client: self.midiRef, name: n))
     }
     
     @available(macOS 11.0, *)
-    func createVirtualDestination<T: ARMIDIEndpointType>(name: String, midiProtocol: MIDIProtocolID, block: @escaping MIDIReceiveBlock) throws -> T {
-        return try T(midiRef: ARMIDI.createVirtualDestination(client: self.midiRef, name: name, midiProtocol: midiProtocol, block: block))
+    func createVirtualSource<T: ARMIDIEndpointType>(name n: String, midiProtocol p: MIDIProtocolID) throws -> T {
+        return try T(midiRef: try ARMIDI.createVirtualSource(client: self.midiRef, name: n, midiProtocol: p))
+    }
+    
+    func createVirtualDestination<T: ARMIDIEndpointType>(name n: String, context c: UnsafeMutableRawPointer?, callback cb: @escaping MIDIReadProc) throws -> T {
+        return try T(midiRef: try ARMIDI.createVirtualDestination(client: self.midiRef, name: n, context: c, callback: cb))
+    }
+    
+    func createVirtualDestination<T: ARMIDIEndpointType>(name n: String, block b: @escaping MIDIReadBlock) throws -> T {
+        return try T(midiRef: try ARMIDI.createVirtualDestination(client: self.midiRef, name: n, block: b))
+    }
+    
+    @available(macOS 11.0, *)
+    func createVirtualDestination<T: ARMIDIEndpointType>(name n: String, midiProtocol p: MIDIProtocolID, block b: @escaping MIDIReceiveBlock) throws -> T {
+        return try T(midiRef: ARMIDI.createVirtualDestination(client: self.midiRef, name: n, midiProtocol: p, block: b))
     }
 }
