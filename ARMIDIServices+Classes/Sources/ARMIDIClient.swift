@@ -18,45 +18,39 @@ public class ARMIDIClient: ARMIDIClientType {
         self.midiRef = midiRef
     }
     
-    public static func createClient(name: String, context: UnsafeMutableRawPointer?, callback: MIDINotifyProc?) throws -> ARMIDIClient {
-        return ARMIDIClient(midiRef: try ARMIDI.createClient(name: name, context: context, callback: callback))
+    public static func createClient(name n: String, context c: UnsafeMutableRawPointer?, callback cb: MIDINotifyProc?) throws -> ARMIDIClient {
+        return ARMIDIClient(midiRef: try ARMIDI.createClient(name: n, context: c, callback: cb))
     }
     
-    public static func createClient(name: String, block: MIDINotifyBlock?) throws -> ARMIDIClient {
-        return ARMIDIClient(midiRef: try ARMIDI.createClient(name: name, block: block))
+    public static func createClient(name n: String, block b: MIDINotifyBlock?) throws -> ARMIDIClient {
+        return ARMIDIClient(midiRef: try ARMIDI.createClient(name: n, block: b))
     }
     
     public func name() throws -> String? {
         return try ARMIDI.getStringProperty(forObject: self.midiRef, property: kMIDIPropertyName)
     }
     
-    public func setModelForSourceAtIndex(_ index: Int, newValue value: String) throws {
-        try virtualSources?[index].model(newValue: value)
-        return
+    public func setModel(forSourceAtIndex i: Int, toValue v: String) throws {
+        try virtualSources?[i].model(newValue: v)
     }
     
-    public func setManufacturerForSourceAtIndex(_ index: Int, newValue value: String) throws {
-        try virtualSources?[index].manufacturer(newValue: value)
-        return
+    public func setManufacturer(forSourceAtIndex i: Int, toValue v: String) throws {
+        try virtualSources?[i].manufacturer(newValue: v)
     }
     
-    public func setUniqueIDForSourceAtIndex(_ index: Int, newValue value: Int32) throws {
-        try virtualSources?[index].uniqueID(newValue: value)
-        return
+    public func setUniqueID(forSourceAtIndex i: Int, toValue v: Int32) throws {
+        try virtualSources?[i].uniqueID(newValue: v)
     }
     
-    public func setModelForDestinationAtIndex(_ index: Int, newValue value: String) throws {
-        try virtualDestinations?[index].model(newValue: value)
-        return
+    public func setModel(forDestinationAtIndex i: Int, newValue v: String) throws {
+        try virtualDestinations?[i].model(newValue: v)
     }
     
-    public func setManufacturerForDestinationAtIndex(_ index: Int, newValue value: String) throws {
-        try virtualDestinations?[index].manufacturer(newValue: value)
-        return
+    public func setManufacturer(forDestinationAtIndex i: Int, toValue v: String) throws {
+        try virtualDestinations?[i].manufacturer(newValue: v)
     }
     
-    public func setUniqueIDForDestinationAtIndex(_ index: Int, newValue value: Int32) throws {
-        try virtualDestinations?[index].uniqueID(newValue: value)
-        return
+    public func setUniqueID(forDestinationAtIndex i: Int, newValue v: Int32) throws {
+        try virtualDestinations?[i].uniqueID(newValue: v)
     }
 }
