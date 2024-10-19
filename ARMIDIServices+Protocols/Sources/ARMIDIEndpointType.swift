@@ -17,10 +17,10 @@ public protocol ARMIDIEndpointType: ARMIDIObjectType {
 public extension ARMIDIEndpointType {
     
     func getEntity<T: ARMIDIEntityType>() throws -> T {
-        return try T(midiRef: entityForEndpoint(self.midiRef))
+        return try T(midiRef: entity(forEndpoint: self.midiRef))
     }
     
     func flushOutput() throws {
-        return try flushOutputForEndpoint(self.midiRef)
+        return try ARMIDI.flushOutput(forEndpoint: self.midiRef)
     }
 }

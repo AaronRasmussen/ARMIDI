@@ -11,13 +11,13 @@ public func numberOfSources() -> Int {
     return MIDIGetNumberOfSources()
 }
 
-public func sourceAtIndex(_ index: Int) -> MIDIEndpointRef {
-    return MIDIGetSource(index)
+public func source(atIndex i: Int) -> MIDIEndpointRef {
+    return MIDIGetSource(i)
 }
 
 public func sources() -> [MIDIEndpointRef] {
     return (0..<numberOfSources()).map {
-        sourceAtIndex($0)
+        source(atIndex: $0)
     }
 }
 
@@ -25,34 +25,32 @@ public func numberOfDestinations() -> Int {
     return MIDIGetNumberOfDestinations()
 }
 
-public func destinationAtIndex(_ index: Int) -> MIDIEndpointRef {
-    return MIDIGetDevice(index)
+public func destination(atIndex i: Int) -> MIDIEndpointRef {
+    return MIDIGetDevice(i)
 }
 
 public func destinations() -> [MIDIEndpointRef] {
     return (0..<numberOfDestinations()).map {
-        destinationAtIndex($0)
+        destination(atIndex: $0)
     }
 }
 
-public func entityForEndpoint(_ endpoint: MIDIEndpointRef) throws -> MIDIEntityRef {
+public func entity(forEndpoint e: MIDIEndpointRef) throws -> MIDIEntityRef {
     var entity: MIDIEntityRef = 0
-    let status = MIDIEndpointGetEntity(endpoint, &entity)
+    let status = MIDIEndpointGetEntity(e, &entity)
     guard status == 0 else { throw ARMIDIError(status) }
     return entity
 }
     
-public func flushOutputForEndpoint (_ endpoint: MIDIEndpointRef) throws {
-    let status = MIDIFlushOutput(endpoint)
+public func flushOutput(forEndpoint e: MIDIEndpointRef) throws {
+    let status = MIDIFlushOutput(e)
     guard status == 0 else { throw ARMIDIError(status) }
-    return
 }
 
-public func disposeOfEndpoint(_ endpointRef: MIDIEndpointRef) throws {
-    let status = MIDIEndpointDispose(endpointRef)
+public func dispose(ofEndpoint e: MIDIEndpointRef) throws {
+    let status = MIDIEndpointDispose(e)
     guard status == 0 else { throw ARMIDIError(status) }
-    return
+}
     
     // public func getRefConsForEndpoint( UNDEFINED )
     // puboic func setRefConsForEndpoint( UNDEFINED )
-}
