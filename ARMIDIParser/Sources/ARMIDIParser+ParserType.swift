@@ -39,68 +39,50 @@ extension ARMIDIParserType {
     
 fileprivate func parseMIDI(state: ARMIDIParserState) throws -> (ARMIDIParserMessage?, ARMIDIParserState) {
     
-    switch state {
+    switch state.hasBytesLeft {
         
-    case    .parsing(let bs, let i),
-            .parsingData(bytes: let bs, let i, _, _, _, _),
-            .parsingSystemExclusiveMessage(let bs, let i, _),
-            .parsingDataTail(let bs, let i, _),
-            .running(let bs, let i, _):
+    // Yes, there are bytes left to parse:
+    case true:
+            
+        // Now check to see if the current byte is a status byte:
+        switch state.currentByte.isStatusByte {
         
-        // First check to see if there are bytes left to parse:
-        switch i < bs.count {
-        
-        // Yes, there are bytes left to parse:
+        // Yes, it is a status byte:
         case true:
-            
-            // Now check to see if the current byte is a status byte:
-            switch bs[i].isStatusByte {
-            
-            // Yes, it is a status byte:
-            case true:
-                return try parseStatusByte(state: state)
-            
-            // No, it is a data byte:
-            case false:
-                return try parseDataByte(state: state)
-            }
+            return try parseStatusByte(state: state)
         
-        // There are no bytes left to parse and we do not have
-        // complete MIDI message to return, so we return the
-        // current state without a message:
+        // No, it is a data byte:
         case false:
-            return (nil, state)
+            return try parseDataByte(state: state)
         }
+    
+    // There are no bytes left to parse and we do not have
+    // complete MIDI message to return, so we return the
+    // current state without a message:
+    case false:
+        return (nil, state)
     }
 }
 
+
 fileprivate func parseStatusByte(state: ARMIDIParserState) throws -> (ARMIDIParserMessage?, ARMIDIParserState) {
     
-    switch state {
-    case    .parsing(let bs, let i),
-            .parsingDataTail(let bs, let i, _),
-            .parsingData(bytes: let bs, let i, _, _, _, _),
-            .parsingSystemExclusiveMessage(let bs, let i, _),
-            .running(let bs, let i, _):
+    switch state.currentByte {
         
-        // What kind of status byte do we have?
-        switch bs[i] {
+    case let b where b.isSystemRealTimeStatusByte:
+        return try parseSystemRealTimeMessage(state: state)
         
-        case let b where b.isSystemRealTimeStatusByte:
-            return try parseSystemRealTimeMessage(state: state)
-            
-        case let b where b.isSystemCommonStatusByte:
-            return try parseSystemCommonMessage(state: state)
-            
-        case kStatusByteSystemExclusive:
-            return try parseSystemExclusiveMessage(state: state)
-            
-        case let b where b.isChannelStatusByte:
-            return try parseChannelMessageStatusByte(state: state)
+    case let b where b.isSystemCommonStatusByte:
+        return try parseSystemCommonMessage(state: state)
         
-        default:
-            fatalError("Parser Error: parseStatusByte attempted to parse data byte \(bs[i]) as a status byte (state: \(state))")
-        }
+    case kStatusByteSystemExclusive:
+        return try parseSystemExclusiveMessage(state: state)
+        
+    case let b where b.isChannelStatusByte:
+        return try parseChannelMessageStatusByte(state: state)
+    
+    case let b:
+        fatalError("Parser Error: parseStatusByte attempted to parse data byte \(b) as a status byte (state: \(state))")
     }
 }
 
@@ -215,8 +197,8 @@ fileprivate func parseSystemExclusiveMessage(state: ARMIDIParserState) throws ->
     case .parsing(let bs, let i):
         return try parseMIDI(state: .parsingSystemExclusiveMessage(bytes: bs, index: i + 1, data: Data([bs[i]])))
         
-    case    .parsingData(_, _, _, _, _, _),
-            .parsingSystemExclusiveMessage(_, _, _):
+    case .parsingData(_, _, _, _, _, _),
+        .parsingSystemExclusiveMessage(_, _, _):
         throw ARMIDIParserError.unexpectedSystemExclusiveStatusByte(state: state)
         
     case .parsingDataTail(let bs, let i, let d):

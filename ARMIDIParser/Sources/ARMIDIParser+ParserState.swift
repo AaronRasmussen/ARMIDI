@@ -17,8 +17,8 @@ public enum ARMIDIParserState: CustomStringConvertible {
         self = .parsing(bytes: Data(), index: 0)
     }
     
-    public var hasBytesLeft: Bool { get
-        {
+    public var hasBytesLeft: Bool {
+        get {
             switch self {
                 
             case    .parsing(let bs, let i),
@@ -27,6 +27,20 @@ public enum ARMIDIParserState: CustomStringConvertible {
                     .parsingDataTail(let bs, let i, _),
                     .running(let bs, let i, _):
                 return i < bs.count
+            }
+        }
+    }
+    
+    public var currentByte: UInt8 {
+        get {
+            switch self {
+                
+            case    .parsing(let bs, let i),
+                    .parsingData(let bs, let i, _, _, _, _),
+                    .parsingSystemExclusiveMessage(let bs, let i, _),
+                    .parsingDataTail(let bs, let i, _),
+                    .running(let bs, let i, _):
+                return bs[i]
             }
         }
     }
