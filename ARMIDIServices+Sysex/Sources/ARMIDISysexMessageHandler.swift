@@ -7,6 +7,6 @@
 
 import CoreMIDI
 
-public protocol ARMIDISysexMessageHandler {
+public protocol ARMIDISysexMessageHandler: AnyObject {
     func handle(sysexMessage: MIDISysexSendRequest)
 }
