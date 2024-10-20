@@ -90,5 +90,4 @@ public func createVirtualDestination(client: MIDIClientRef, name: String, midiPr
 public func dispose(client: MIDIClientRef) throws {
     let status = MIDIClientDispose(client)
     guard status == 0 else { throw ARMIDIError(status) }
-    return
 }
