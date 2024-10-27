@@ -88,7 +88,7 @@ public enum ARMIDIParserState: CustomStringConvertible {
             return "State: .parsingDataTail (\(bs.count) bytes, index \(i); data count: \(d.count); data: \(d)) \nBytes: \(bs)"
             
         case .running(let bs, let i, statusByte: let sB):
-            return "State: .running (\(bs.count) bytes, index \(i); status byte: \(sB) \nBytes: \(bs)"
+            return "State: .running (\(bs.count) bytes, index \(i); status byte: \(sB)) \nBytes: \(bs)"
         }
     }
 }
