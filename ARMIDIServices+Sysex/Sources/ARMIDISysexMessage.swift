@@ -9,7 +9,7 @@ import CoreMIDI
 
 public func sysexSendRequestCallback(request: UnsafeMutablePointer<MIDISysexSendRequest>) {
     let r = request.pointee
-    let handler = r.completionRefCon?.bindMemory(to: Optional<ARMIDISysexMessageHandler>.self, capacity: 1).pointee
+    let handler = r.completionRefCon?.bindMemory(to: ARMIDISysexMessageHandler.self, capacity: 1).pointee
     handler?.handle(sysexMessage: r)
 }
 
@@ -30,13 +30,13 @@ public class ARMIDISysexMessage {
         return self._message
     }
     
-    public init(sysexData d: [UInt8], destination: ARMIDIDestination, handler: ARMIDISysexMessageHandler?, callback: MIDICompletionProc = sysexSendRequestCallback) {
+    public init(sysexData d: [UInt8], destination: ARMIDIDestination, handler: ARMIDISysexMessageHandler?, callback: @escaping MIDICompletionProc) {
         self._data = d
         self._handler = handler
         self._message = withUnsafeMutablePointer(to: &self._handler) { context in
             self._data.withUnsafeBufferPointer { data in
                 guard let baseAddress = data.baseAddress else { return nil }
-                return MIDISysexSendRequest(destination: destination.midiRef, data: baseAddress, bytesToSend: UInt32(_data.count), complete: false, reserved: (0, 0, 0), completionProc: sysexSendRequestCallback, completionRefCon: context)
+                return MIDISysexSendRequest(destination: destination.midiRef, data: baseAddress, bytesToSend: UInt32(_data.count), complete: false, reserved: (0, 0, 0), completionProc: callback, completionRefCon: context)
             }
         }
     }
