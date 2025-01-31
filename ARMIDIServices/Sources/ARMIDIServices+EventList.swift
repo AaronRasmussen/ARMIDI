@@ -34,3 +34,4 @@ public func distributeEventList(_ eventList: inout MIDIEventList, fromSource sou
 public func nextEventPacket(currentPacket: inout MIDIEventPacket) -> UnsafeMutablePointer<MIDIEventPacket> {
     return MIDIEventPacketNext(&currentPacket)
 }
+
