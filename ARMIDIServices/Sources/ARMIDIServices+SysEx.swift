@@ -7,7 +7,7 @@
 
 import CoreMIDI
 
-public struct ParsedSysExUMP {
+public struct ParsedSysexUMP {
     public let group: UInt32
     public let status: UInt32
     public let numBytes: UInt32
@@ -22,7 +22,7 @@ public struct ParsedSysExUMP {
 }
 
 @available(macOS 11.0, *)
-public func parseSysExUMP(words: MIDIEventPacket.WordCollection) -> ParsedSysExUMP {
+public func parseSysexUMP(words: MIDIEventPacket.WordCollection) -> ParsedSysexUMP {
     
     let word64 = (UInt64(words[0]) << 32) | UInt64(words[1])
     
@@ -34,5 +34,33 @@ public func parseSysExUMP(words: MIDIEventPacket.WordCollection) -> ParsedSysExU
         UInt8(word64 >> (40 - 8 * index) & 0xff)
     }
     
-    return ParsedSysExUMP(group: group, status: status, numBytes: numBytes, data: data)
+    return ParsedSysexUMP(group: group, status: status, numBytes: numBytes, data: data)
+}
+
+public func createSysexSendRequest(destination d: MIDIEndpointRef,
+                                dataPointer dp: UnsafeMutablePointer<UInt8>,
+                                numberOfBytesToSend bs: UInt32,
+                                handler h: UnsafeMutableRawPointer?) -> MIDISysexSendRequest {
+    
+    return MIDISysexSendRequest(destination: d,
+                                data: dp,
+                                bytesToSend: bs,
+                                complete: false,
+                                reserved: (0,0,0),
+                                completionProc: sendRequestCompletionWrapper,
+                                completionRefCon: h)
+}
+
+fileprivate func sendRequestCompletionWrapper(sendRequest r: UnsafeMutablePointer<MIDISysexSendRequest>) -> Void {
+    let request = r.pointee
+    guard let handler = request.completionRefCon else { return }
+    Unmanaged<SendRequestHandler>.fromOpaque(handler).takeUnretainedValue().handle(request)
+}
+
+public class SendRequestHandler {
+    fileprivate var handle: (MIDISysexSendRequest) -> Void = { _ in return }
+    public init() { }
+    public func define(_ h: @escaping (MIDISysexSendRequest) -> Void) {
+        self.handle = h
+    }
 }
