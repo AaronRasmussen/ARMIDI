@@ -32,7 +32,7 @@ public extension ARMIDIObjectType {
     }
     
     func remove(property p: CFString) throws {
-        return try ARMIDI.remove(property: p, fromObject: self.midiRef)
+        return try ARMIDI.remove(property: p, forObject: self.midiRef)
     }
     
     func getStringProperty(_ p: CFString) throws -> String? {
