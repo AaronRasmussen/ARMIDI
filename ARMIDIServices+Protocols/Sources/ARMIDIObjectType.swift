@@ -12,7 +12,7 @@ public protocol ARMIDIObjectType {
     var midiRef: UInt32 { get }
     
     func getProperties(deep: Bool) throws -> CFPropertyList?
-    func remove(property: CFString) throws
+    func removeProperty(_ property: CFString) throws
     func getStringProperty(_: CFString) throws -> String?
     func setStringProperty(toValue: String, property: CFString) throws
     func getIntegerProperty(_: CFString) throws -> Int32?
@@ -31,12 +31,12 @@ public extension ARMIDIObjectType {
         return try ARMIDI.getProperties(forObject: self.midiRef, deep: deep)
     }
     
-    func remove(property p: CFString) throws {
-        return try ARMIDI.remove(property: p, forObject: self.midiRef)
+    func removeProperty(_ property: CFString) throws {
+        return try ARMIDI.removeProperty(property, forObject: self.midiRef)
     }
     
-    func getStringProperty(_ p: CFString) throws -> String? {
-        return try ARMIDI.getStringProperty(forObject: self.midiRef, property: p)
+    func getStringProperty(_ property: CFString) throws -> String? {
+        return try ARMIDI.getStringProperty(property, forObject: self.midiRef)
     }
     
     func setStringProperty(toValue v: String, property p: CFString) throws {

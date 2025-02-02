@@ -22,8 +22,4 @@ public class ARMIDIClient: ARMIDIClientType {
     public static func createClient(name n: String, block b: MIDINotifyBlock?) throws -> ARMIDIClient {
         return ARMIDIClient(midiRef: try ARMIDI.createClient(name: n, block: b))
     }
-    
-    public func name() throws -> String? {
-        return try ARMIDI.getStringProperty(forObject: self.midiRef, property: kMIDIPropertyName)
-    }
 }

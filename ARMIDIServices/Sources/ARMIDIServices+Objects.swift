@@ -56,14 +56,14 @@ public func getProperties(forObject object: MIDIObjectRef, deep: Bool) throws ->
 
 /// Removes an object’s property.
 ///
-/// `remove(property:forObject:)` is a Swift-friendly wrapper for `CoreMIDI`'s `MIDIObjectRemoveProperty(_:_:)` function.
+/// `removeProperty(_:forObject:)` is a Swift-friendly wrapper for `CoreMIDI`'s `MIDIObjectRemoveProperty(_:_:)` function.
 ///
 /// - Parameters:
 ///   - property: The property to remove.
 ///   - object: The object to modify.
 ///
 /// - Throws: `ARMIDIError`
-public func remove(property: CFString, forObject object: MIDIObjectRef) throws {
+public func removeProperty(_ property: CFString, forObject object: MIDIObjectRef) throws {
     
     let status = MIDIObjectRemoveProperty(object, property)
     
@@ -72,11 +72,31 @@ public func remove(property: CFString, forObject object: MIDIObjectRef) throws {
     else { throw ARMIDIError(status) }
 }
 
-public func getStringProperty(forObject o: MIDIObjectRef, property p: CFString) throws -> String? {
+/// Gets an object’s string-type property.
+///
+/// `getStringProperty(_:forObject:)` is a Swift-friendly wrapper for `CoreMIDI`'s `MIDIObjectGetStringProperty(_:_:_:)` function.
+///
+/// - Parameters:
+///   - object: The object to query.
+///   - property: The name of the property to return.
+///
+/// - Throws: `ARMIDIError`
+///
+/// - Returns: A `String?` value. If the property is not set for the object the return value will be `nil`.
+public func getStringProperty(_ property: CFString, forObject object: MIDIObjectRef) throws -> String? {
+    
     var stringProperty: Unmanaged<CFString>? = nil
-    let status = MIDIObjectGetStringProperty(o, p, &stringProperty)
-    guard status != kMIDIUnknownProperty else { return nil }
-    guard status == 0 else { throw ARMIDIError(status) }
+    
+    let status = MIDIObjectGetStringProperty(object, property, &stringProperty)
+    
+    guard
+        status != kMIDIUnknownProperty
+    else { return nil }
+    
+    guard
+        status == 0
+    else { throw ARMIDIError(status) }
+    
     return stringProperty?.takeUnretainedValue() as String?
 }
 
