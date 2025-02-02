@@ -9,13 +9,13 @@ import CoreMIDI
 
 /// Search for the MIDI object with the given `MIDIUniqueID`
 ///
-/// If the MIDI object can't be found `findObject(withUniqueID:)` will throw `ARMIDIError.objectNotFound`.
+/// `findObject(withUniqueID:)` is a Swift-friendly wrapper for `CoreMIDI`'s `MIDIObjectFindByUniqueID(_:_:_:)` function.
 ///
-/// - Parameter withUniqueID: Search for the MIDI object `associated with this `MIDIUniqueID`
+/// - Parameter uniqueID: The `MIDIUniqueID` used to search for the MIDI object.
 ///
 /// - Returns: A tuple containing the `MIDIObjectRef` and `MIDIObjectType` of the sought-after MIDI object.
 ///
-/// - Throws: `ARMIDIError`
+/// - Throws: `ARMIDIError`.  If the MIDI object is not found `ARMIDIError.objectNotFound` will be thrown.
 public func findObject(withUniqueID uniqueID: MIDIUniqueID) throws -> (objectRef: MIDIObjectRef, objectType: MIDIObjectType) {
     var midiRef: MIDIObjectRef = 0
     var objectType: MIDIObjectType = .other
