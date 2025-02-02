@@ -38,9 +38,9 @@ public func findObject(withUniqueID uniqueID: MIDIUniqueID) throws -> (objectRef
 ///   - object: The object to query.
 ///   - deep: Specify `true` to include the object’s children; for example, a device’s entities, or an entity’s endpoints.
 ///
-/// - Returns: An `Optional<CFPropertyList>` containing the object's properties.
-///
 /// - Throws: `ARMIDIError`.
+///
+/// - Returns: An `Optional<CFPropertyList>` containing the object's properties.
 public func getProperties(forObject object: MIDIObjectRef, deep: Bool) throws -> CFPropertyList? {
     
     var properties: Unmanaged<CFPropertyList>? = nil
@@ -54,9 +54,22 @@ public func getProperties(forObject object: MIDIObjectRef, deep: Bool) throws ->
     return properties?.takeUnretainedValue()
 }
 
-public func remove(property p: CFString, fromObject o: MIDIObjectRef) throws {
-    let status = MIDIObjectRemoveProperty(o, p)
-    guard status == 0 else { throw ARMIDIError(status) }
+/// Removes an object’s property.
+///
+/// `remove(property:forObject:)` is a Swift-friendly wrapper for `CoreMIDI`'s `MIDIObjectRemoveProperty(_:_:)` function.
+///
+/// - Parameters:
+///   - property: The property to remove.
+///   - object: The object to modify.
+///
+/// - Throws: `ARMIDIError`
+public func remove(property: CFString, forObject object: MIDIObjectRef) throws {
+    
+    let status = MIDIObjectRemoveProperty(object, property)
+    
+    guard
+        status == 0
+    else { throw ARMIDIError(status) }
 }
 
 public func getStringProperty(forObject o: MIDIObjectRef, property p: CFString) throws -> String? {
