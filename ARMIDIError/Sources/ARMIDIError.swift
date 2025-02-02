@@ -7,23 +7,96 @@
 
 import CoreMIDI
 
+/// An `Error` type based on the `OSStatus` error codes defined by `CoreMIDI`.
 public enum ARMIDIError: Error, CustomStringConvertible {
+    
+    /// The client is invalid.
+    ///
+    /// `OSStatus kMIDIInvalidClient` (`-10830`)
     case invalidClient
+    
+    /// The port is invalid.
+    ///
+    /// `OSStatus kMIDIInvalidPort` (`-10831`)
     case invalidPort
+    
+    /// A function received a source endpoint when it required a destination endpoint, or vice versa.
+    ///
+    /// `OSStatus kMIDIWrongEndpointType` (`-10832`)
     case wrongEndpointType
+    
+    /// The connection you’re trying to close doesn’t exist.
+    ///
+    /// `OSStatus kMIDINoConnection` (`-10833`)
     case noConnection
+    
+    /// The system doesn’t recognize the endpoint.
+    ///
+    /// `OSStatus kMIDIUnknownEndpoint` (`-10834`)
     case unknownEndpoint
+    
+    /// Attempt to query a property not set on the object.
+    ///
+    /// `OSStatus kMIDIUnknownProperty` (`-10835`)
     case unknownProperty
+    
+    /// Attempt to set a property with a value not of the correct type.
+    ///
+    /// `OSStatus kMIDIWrongPropertyType` (`-10836`)
     case wrongPropertyType
+    
+    /// A MIDI setup object doesn’t currently exist.
+    ///
+    /// `OSStatus kMIDINoCurrentSetup` (`-10837`)
     case noCurrentSetup
+    
+    /// The communication with the MIDI server failed.
+    ///
+    /// `OSStatus kMIDIMessageSendErr` (`-10838`)
     case messageSendError
+    
+    /// The system can’t start the MIDI server.
+    ///
+    /// `OSStatus kMIDIServerStartErr` (`-10839`)
     case serverStartError
+    
+    /// The system can’t read the saved state.
+    ///
+    /// `OSStatus kMIDISetupFormatErr` (`-10840`)
     case setupFormatError
+    
+    /// A driver is calling a non-I/O function in the server from a thread other than the server’s main thread.
+    ///
+    /// `OSStatus kMIDIWrongThread` (`-10841`)
     case wrongThread
+    
+    /// The requested object doesn’t exist.
+    ///
+    /// `OSStatus kMIDIObjectNotFound` (`-10842`)
     case objectNotFound
+    
+    /// The identifier you’re trying to set isn’t unique.
+    ///
+    /// `OSStatus kMIDIIDNotUnique` (`-10843`)
     case IDNotUnique
+    
+    /// The process doesn’t have privileges for the requested operation.
+    ///
+    /// `OSStatus kMIDINotPermitted` (`-10844`)
     case notPermitted
+    
+    /// The system can’t perform the requested operation.
+    ///
+    /// `OSStatus kMIDIUnknownError` (`-10845`)
     case unknownError
+    
+    /// The returned `OSStatus` error code is not defined by CoreMIDI.
+    ///
+    /// The `OSStatus` error code is stored as a associated value.
+    ///
+    /// The `description` property for this case includes the `OSStatus` code.
+    /// If the error code can be parsed to a four-character ASCII text string, that four-character
+    /// string will also be included in the `description`.
     case undefined(OSStatus)
     
     public init(_ status: OSStatus) {
@@ -65,6 +138,7 @@ public enum ARMIDIError: Error, CustomStringConvertible {
         }
     }
     
+    /// A brief description of the error including the underlying `OSStatus` error code
     public var description: String {
         get {
             switch self {
@@ -106,7 +180,7 @@ public enum ARMIDIError: Error, CustomStringConvertible {
                 }) else {
                     return "Error: Unknown error (OSStatus \(status))"
                 }
-                return "Error: Unknown error (OSStatus (\(status): '\(fourCharCode)')"
+                return "Error: Unknown error (OSStatus \(status): '\(fourCharCode)')"
             }
         }
     }
