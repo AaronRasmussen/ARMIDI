@@ -7,7 +7,7 @@
 
 import CoreMIDI
 
-/// Search for the MIDI object with the given `MIDIUniqueID`
+/// Search for the MIDI object with the given `MIDIUniqueID`.
 ///
 /// `findObject(withUniqueID:)` is a Swift-friendly wrapper for `CoreMIDI`'s `MIDIObjectFindByUniqueID(_:_:_:)` function.
 ///
@@ -24,9 +24,20 @@ public func findObject(withUniqueID uniqueID: MIDIUniqueID) throws -> (objectRef
     return (midiRef, objectType)
 }
 
-public func getProperties(forObject o: MIDIObjectRef, deep: Bool) throws -> CFPropertyList? {
+/// Returns all properties of an object.
+///
+/// `getProperties(forObject:deep:)` is a Swift-friendly wrapper for `CoreMIDI`'s `MIDIObjectGetProperties(_:_:_:)` function.
+///
+/// - Parameters:
+///   - object: The object to query.
+///   - deep: Specify `true` to include the object’s children; for example, a device’s entities, or an entity’s endpoints.
+///
+/// - Returns: An `Optional<CFPropertyList>` containing the object's properties.
+///
+/// - Throws: `ARMIDIError`.
+public func getProperties(forObject object: MIDIObjectRef, deep: Bool) throws -> CFPropertyList? {
     var properties: Unmanaged<CFPropertyList>? = nil
-    let status = MIDIObjectGetProperties(o, &properties, deep)
+    let status = MIDIObjectGetProperties(object, &properties, deep)
     guard status == 0 else { throw ARMIDIError(status) }
     return properties?.takeUnretainedValue()
 }
