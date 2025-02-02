@@ -17,10 +17,16 @@ import CoreMIDI
 ///
 /// - Throws: `ARMIDIError`.  If the MIDI object is not found `ARMIDIError.objectNotFound` will be thrown.
 public func findObject(withUniqueID uniqueID: MIDIUniqueID) throws -> (objectRef: MIDIObjectRef, objectType: MIDIObjectType) {
+    
     var midiRef: MIDIObjectRef = 0
     var objectType: MIDIObjectType = .other
+    
     let status = MIDIObjectFindByUniqueID(uniqueID, &midiRef, &objectType)
-    guard status == 0 else { throw ARMIDIError(status) }
+    
+    guard
+        status == 0
+    else { throw ARMIDIError(status) }
+    
     return (midiRef, objectType)
 }
 
@@ -36,9 +42,15 @@ public func findObject(withUniqueID uniqueID: MIDIUniqueID) throws -> (objectRef
 ///
 /// - Throws: `ARMIDIError`.
 public func getProperties(forObject object: MIDIObjectRef, deep: Bool) throws -> CFPropertyList? {
+    
     var properties: Unmanaged<CFPropertyList>? = nil
+    
     let status = MIDIObjectGetProperties(object, &properties, deep)
-    guard status == 0 else { throw ARMIDIError(status) }
+    
+    guard
+        status == 0
+    else { throw ARMIDIError(status) }
+    
     return properties?.takeUnretainedValue()
 }
 
