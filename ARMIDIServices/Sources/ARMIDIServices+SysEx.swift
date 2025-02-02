@@ -37,30 +37,58 @@ public func parseSysexUMP(words: MIDIEventPacket.WordCollection) -> ParsedSysexU
     return ParsedSysexUMP(group: group, status: status, numBytes: numBytes, data: data)
 }
 
-public func createSysexSendRequest(destination d: MIDIEndpointRef,
-                                dataPointer dp: UnsafeMutablePointer<UInt8>,
-                                numberOfBytesToSend bs: UInt32,
-                                handler h: UnsafeMutableRawPointer?) -> MIDISysexSendRequest {
+
+// A class that replaces CoreMIDI's MIDISysexSendRequest
+public class ARMIDISysexMessage {
     
-    return MIDISysexSendRequest(destination: d,
-                                data: dp,
-                                bytesToSend: bs,
-                                complete: false,
-                                reserved: (0,0,0),
-                                completionProc: sendRequestCompletionWrapper,
-                                completionRefCon: h)
-}
-
-fileprivate func sendRequestCompletionWrapper(sendRequest r: UnsafeMutablePointer<MIDISysexSendRequest>) -> Void {
-    let request = r.pointee
-    guard let handler = request.completionRefCon else { return }
-    Unmanaged<SendRequestHandler>.fromOpaque(handler).takeUnretainedValue().handle(request)
-}
-
-public class SendRequestHandler {
-    fileprivate var handle: (MIDISysexSendRequest) -> Void = { _ in return }
-    public init() { }
-    public func define(_ h: @escaping (MIDISysexSendRequest) -> Void) {
-        self.handle = h
+    //The completion handler
+    fileprivate var handle: ((MIDISysexSendRequest) -> Void)?
+    private var data: [UInt8] = []
+    private var sendRequest: MIDISysexSendRequest!
+    private var destination: MIDIEndpointRef
+    
+    public init(data: [UInt8],
+                destination: MIDIEndpointRef,
+                completionHandler: ((MIDISysexSendRequest) -> Void)?) {
+        
+        self.data = data
+        self.destination = destination
+        self.handle = completionHandler
     }
+    
+    public func send() throws {
+        
+        let byteCount: UInt32 = UInt32(self.data.count)
+        
+        self.sendRequest = withUnsafeMutablePointer(to: &self.data[0]) { dataPointer in
+            
+            MIDISysexSendRequest(destination: self.destination,
+                                 data: dataPointer,
+                                 bytesToSend: byteCount,
+                                 complete: false,
+                                 reserved: (0,0,0),
+                                 completionProc: sendRequestCompletionWrapper,
+                                 completionRefCon: Unmanaged.passRetained(self).toOpaque())
+        }
+        
+        let status = MIDISendSysex(&self.sendRequest)
+        
+        guard status == 0 else {
+            fatalError()
+        }
+    }
+}
+
+fileprivate func sendRequestCompletionWrapper(_ sysexSendRequestPointer: UnsafeMutablePointer<MIDISysexSendRequest>) -> Void {
+    
+    let sysexSendRequest = sysexSendRequestPointer.pointee
+    
+    guard
+        let unwrappedRawHandler = sysexSendRequest.completionRefCon
+    else { return }
+    
+    let unmanagedHandler = Unmanaged<ARMIDISysexMessage>.fromOpaque(unwrappedRawHandler)
+    let handler = unmanagedHandler.takeRetainedValue()
+    
+    handler.handle?(sysexSendRequest)
 }
