@@ -10,13 +10,6 @@ import ARMIDIError
 
 extension MIDIObjectReferable {
     
-    /// Retrieves the identified `String` property.
-    ///
-    /// - Parameter property: A constant defined by `CoreMIDI` for referring to MIDI object properties.
-    ///
-    /// - Throws: `MIDIError`
-    ///
-    /// - Returns: A `String` value, or `nil` if the property is not set for the object.
     public func getStringProperty(_ property: CFString) throws -> String? {
         
         var stringProperty: Unmanaged<CFString>? = nil

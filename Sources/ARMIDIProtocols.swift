@@ -18,13 +18,7 @@ public protocol MIDIReferable {
     var midiRef: UInt32 { get }
 }
 
-/// A protocol for MIDI objects.
-public protocol MIDIObjectReferable: MIDIReferable {
-    
-    func getStringProperty(_ property: CFString) throws -> String?
-}
-
-extension UInt32: MIDIReferable, MIDIObjectReferable {
+extension UInt32: MIDIReferable, MIDIObjectReferable, MIDIDeviceReferable {
     
     /// Returns `self` for all `UInt32` values.
     ///
@@ -32,4 +26,37 @@ extension UInt32: MIDIReferable, MIDIObjectReferable {
     public var midiRef: UInt32 {
         return self
     }
+}
+
+/// A protocol for MIDI objects.
+public protocol MIDIObjectReferable: MIDIReferable {
+    
+    /// Retrieves the identified `String` property.
+    ///
+    /// - Parameter property: A constant defined by `CoreMIDI` for referring to MIDI object properties.
+    ///
+    /// - Throws: `MIDIError`
+    ///
+    /// - Returns: A `String` value, or `nil` if the property is not set for the object.
+    func getStringProperty(_ property: CFString) throws -> String?
+}
+
+public protocol MIDIDeviceReferable: MIDIObjectReferable {
+    
+    /// The number of MIDI entities for the MIDI device.
+    ///
+    /// - Returns: The number of MIDI entities for the MIDI device..
+    func numberOfEntities() -> Int
+    
+    /// The MIDI entity at the provided index.
+    ///
+    /// - Parameter index: The index of the entity to return.
+    ///
+    /// - Returns: The `MIDIEntityRef` of the MIDI entity at the provided index.
+    func entity(atIndex index: Int) -> MIDIEntityRef
+    
+    /// An array of the MIDI entities for this device..
+    ///
+    /// - Returns: An `Array<MIDIEntityRef>` of all the MIDI entities for this device..
+    func entities() -> [MIDIEntityRef]
 }
