@@ -15,7 +15,7 @@ public protocol EntityReferable: ObjectReferable {
     /// - Throws: `MIDIError`
     ///
     /// - Returns: A `MIDIDeviceRef` for the MIDI entity's parent MIDI device.
-    func device() throws -> MIDIDeviceRef
+    func device() throws -> DeviceReferable
     
     /// The number of MIDI sources in this MIDI entity.
     ///
@@ -32,22 +32,22 @@ public protocol EntityReferable: ObjectReferable {
     /// - Parameter index: The index of the MIDI source to return.
     ///
     /// - Returns: The `MIDIEndpointRef` of the MIDI source in the MIDI entity at the provided index.
-    func source(atIndex index: Int) -> MIDIEndpointRef
+    func source(atIndex index: Int) -> EndpointReferable
     
     /// The MIDI destination in this MIDI entity at the provided index.
     ///
     /// - Parameter index: The index of the MIDI destination to return.
     ///
     /// - Returns: The `MIDIEndpointRef` of the MIDI destination in this MIDI entity at the provided index.
-    func destination(atIndex index: Int) -> MIDIEndpointRef
+    func destination(atIndex index: Int) -> EndpointReferable
     
     /// An array of all MIDI sources in this MIDI entity.
     ///
     /// - Returns: An `Array<MIDIEndpointRef>` of all MIDI sources in this MIDI entity.
-    func sources() -> [MIDIEndpointRef]
+    func sources() -> [EndpointReferable]
     
     /// An array of MIDI destinations in this MIDI entity.
     ///
     /// - Returns: An `Array<MIDIEndpointRef>` of all MIDI destinations in this MIDI entity.
-    func destinations() -> [MIDIEndpointRef]
+    func destinations() -> [EndpointReferable]
 }

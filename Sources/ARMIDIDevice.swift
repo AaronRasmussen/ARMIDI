@@ -14,11 +14,11 @@ extension MIDIDeviceRef: DeviceReferable {
         return Int(MIDIDeviceGetNumberOfEntities(self.midiRef))
     }
     
-    public func entity(atIndex index: Int) -> MIDIEntityRef {
+    public func entity(atIndex index: Int) -> EntityReferable {
         return MIDIDeviceGetEntity(self.midiRef, index)
     }
     
-    public func entities() -> [MIDIEntityRef] {
+    public func entities() -> [EntityReferable] {
         return (0..<self.numberOfEntities()).map(self.entity)
     }
 }

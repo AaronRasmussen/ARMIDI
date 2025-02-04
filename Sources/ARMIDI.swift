@@ -17,7 +17,7 @@ import ARMIDIError
 /// - Returns: A tuple containing the `MIDIObjectRef` and `MIDIObjectType` of the MIDI object.
 ///
 /// - Throws: `MIDIError`.  If the MIDI object is not found `MIDIError.objectNotFound` will be thrown.
-public func findObject(withUniqueID uniqueID: MIDIUniqueID) throws -> (object: MIDIObjectRef, type: MIDIObjectType) {
+public func findObject(withUniqueID uniqueID: MIDIUniqueID) throws -> (object: ObjectReferable, type: MIDIObjectType) {
     
     var object: MIDIObjectRef = 0
     var type: MIDIObjectType = .other
@@ -45,13 +45,13 @@ public func numberOfDevices() -> Int {
 /// - Parameter index: The index of the internal MIDI device to return.
 ///
 /// - Returns: The `MIDIDeviceRef` of the internal MIDI device in the MIDI system at the provided index.
-public func device(atIndex index: Int) -> MIDIDeviceRef {
+public func device(atIndex index: Int) -> DeviceReferable {
     return MIDIGetDevice(index)
 }
 
 /// An array of all internal MIDI devices in the system.
 ///
 /// - Returns: An `Array<MIDIDeviceRef>` of all internal MIDI devices in the system.
-public func devices() -> [MIDIDeviceRef] {
+public func devices() -> [DeviceReferable] {
     (0..<numberOfDevices()).map(device)
 }
