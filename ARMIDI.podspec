@@ -14,7 +14,7 @@ Pod::Spec.new do |spec|
     spec.platform               = :osx
     spec.osx.deployment_target  = "10.15"
     spec.swift_version          = '5.3'
-    spec.source_files           = 'ARMIDI/*'
+    spec.source_files           = 'Sources/*'
     spec.framework              = 'CoreMIDI'
     
     spec.dependency             'ARMIDIError'
