@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
     spec.name                   = 'ARMIDI'
-    spec.version                = '0.3.3'
+    spec.version                = '0.3.4'
     spec.summary                = 'A framework for working with CoreMIDI in Swift.'
     spec.description            = <<-DESC
         CoreMIDI is a pain in the ass. This pod makes it easier to for me to write CoreMIDI code in Swift. What does it do? you ask. It does what I need it to. Nothing more, nothing less. I have a Yamaha DX21 and I wanted to use my computer to do cool MIDI stuff with it. It is the code I use when I want to play with my toys.
