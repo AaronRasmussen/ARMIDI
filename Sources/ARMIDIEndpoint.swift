@@ -9,6 +9,7 @@ import CoreMIDI
 import ARMIDIError
 
 extension MIDIEndpointRef: EndpointReferable {
+    
     public func entity() throws -> EntityReferable {
         
         var entity: MIDIEntityRef = 0

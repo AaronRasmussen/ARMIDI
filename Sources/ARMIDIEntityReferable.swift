@@ -14,7 +14,7 @@ public protocol EntityReferable: ObjectReferable {
     ///
     /// - Throws: `MIDIError`
     ///
-    /// - Returns: A `MIDIDeviceRef` for the MIDI entity's parent MIDI device.
+    /// - Returns: A `MIDIDeviceRef` for this MIDI entity's parent MIDI device.
     func device() throws -> DeviceReferable
     
     /// The number of MIDI sources in this MIDI entity.
