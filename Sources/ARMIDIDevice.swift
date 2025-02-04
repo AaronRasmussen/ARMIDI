@@ -8,7 +8,7 @@
 import CoreMIDI
 import ARMIDIError
 
-extension DeviceReferable {
+extension MIDIDeviceRef: DeviceReferable {
     
     public func numberOfEntities() -> Int {
         return Int(MIDIDeviceGetNumberOfEntities(self.midiRef))

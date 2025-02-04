@@ -8,10 +8,11 @@
 import CoreMIDI
 import ARMIDIError
 
-extension MIDIObjectRef: ObjectReferable { }
-
 /// A protocol for MIDI objects.
-public protocol ObjectReferable: MIDIReferable {
+public protocol ObjectReferable {
+    
+    /// The `UInt32` value used to refer to the MIDI object.
+    var midiRef: UInt32 { get }
     
     /// Retrieves the identified `String` property.
     ///

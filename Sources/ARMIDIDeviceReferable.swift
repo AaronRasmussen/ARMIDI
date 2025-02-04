@@ -7,8 +7,6 @@
 
 import CoreMIDI
 
-extension MIDIDeviceRef: DeviceReferable { }
-
 public protocol DeviceReferable: ObjectReferable {
     
     /// The number of MIDI entities for the MIDI device.
