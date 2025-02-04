@@ -19,10 +19,10 @@ public protocol DeviceReferable: ObjectReferable {
     /// - Parameter index: The index of the MIDI entity to return.
     ///
     /// - Returns: The `MIDIEntityRef` of the MIDI entity in this MIDI device at the provided index.
-    func entity(atIndex index: Int) -> MIDIEntityRef
+    func entity(atIndex index: Int) -> EntityReferable
     
     /// An array of all MIDI entities in this device.
     ///
     /// - Returns: An `Array<MIDIEntityRef>` of all MIDI entities in the MIDI device.
-    func entities() -> [MIDIEntityRef]
+    func entities() -> [EntityReferable]
 }

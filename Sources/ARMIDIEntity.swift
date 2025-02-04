@@ -10,6 +10,20 @@ import ARMIDIError
 
 extension MIDIEntityRef: EntityReferable {
     
+    public func device() throws -> DeviceReferable {
+        
+        var device: MIDIDeviceRef = 0
+        let status = MIDIEntityGetDevice(self.midiRef, &device)
+        
+        guard
+            status == 0
+        else {
+            throw MIDIError(status)
+        }
+        
+        return device
+    }
+    
     public func numberOfSources() -> Int {
         return MIDIEntityGetNumberOfSources(self.midiRef) as Int
     }
@@ -32,21 +46,5 @@ extension MIDIEntityRef: EntityReferable {
     
     public func destinations() -> [MIDIEndpointRef] {
         return (0..<self.numberOfDestinations()).map(self.source)
-    }
-    
-    
-    public func device() throws -> MIDIDeviceRef {
-        
-        var device: MIDIDeviceRef = 0
-        
-        let status = MIDIEntityGetDevice(self.midiRef, &device)
-        
-        guard
-            status == 0
-        else {
-            throw MIDIError(status)
-        }
-        
-        return device
     }
 }
