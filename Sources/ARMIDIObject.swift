@@ -8,7 +8,7 @@
 import CoreMIDI
 import ARMIDIError
 
-extension MIDIObjectReferable {
+extension ObjectReferable {
     
     public func getStringProperty(_ property: CFString) throws -> String? {
         

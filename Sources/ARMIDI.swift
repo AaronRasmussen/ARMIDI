@@ -1,5 +1,5 @@
 //
-//  ARMIDIGlobal.swift
+//  ARMIDI.swift
 //  Pods
 //
 //  Created by Aaron Rasmussen on 2/4/25.
