@@ -45,6 +45,6 @@ extension MIDIEntityRef: EntityReferable {
     }
     
     public func destinations() -> [EndpointReferable] {
-        return (0..<self.numberOfDestinations()).map(self.source)
+        return (0..<self.numberOfDestinations()).map(self.destination)
     }
 }
