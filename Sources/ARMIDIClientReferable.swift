@@ -10,36 +10,12 @@ import ARMIDIError
 
 public protocol ClientReferable: ObjectReferable {
     
-    
-}
-
-public typealias ClientNotificationHandler = (MIDINotification) -> ()
-
-public func createClient(name: String, notificationHandler: ClientNotificationHandler?) throws -> ClientReferable {
-    
-    func notifyBlock(_ handler: ClientNotificationHandler?) -> MIDINotifyBlock? {
-        
-        guard
-            let handle = handler
-        else {
-            return nil
-        }
-        
-        return { notificationPointer in
-            
-            let notification = notificationPointer.pointee
-            handle(notification)
-        }
-    }
-    
-    var client: MIDIClientRef = 0
-    let status = MIDIClientCreateWithBlock(name as CFString, &client, notifyBlock(notificationHandler))
-    
-    guard
-        status == 0
-    else {
-        throw MIDIError(status)
-    }
-    
-    return client
+    /// Creates a MIDI input port.
+    ///
+    /// - Parameters:
+    ///   - name: The name of the MIDI input port.
+    ///   - messageHandler: A `MIDIReadBlock` for parsing the incoming MIDI packet list.
+    /// - Throws: `MIDIError`
+    /// - Returns: A `PortReferable` MIDI input port.
+    func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> PortReferable
 }
