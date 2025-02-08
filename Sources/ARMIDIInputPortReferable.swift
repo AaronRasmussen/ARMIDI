@@ -8,4 +8,6 @@
 import CoreMIDI
 import ARMIDIError
 
-public protocol InputPortReferable: ObjectReferable { }
+public protocol InputPortReferable: ObjectReferable {
+    func connect(toSource source: SourceReferable) throws
+}
