@@ -32,7 +32,7 @@ public protocol EntityReferable: ObjectReferable {
     /// - Parameter index: The index of the MIDI source to return.
     ///
     /// - Returns: The `MIDIEndpointRef` of the MIDI source in the MIDI entity at the provided index.
-    func source(atIndex index: Int) -> EndpointReferable
+    func source(atIndex index: Int) -> SourceReferable
     
     /// The MIDI destination in this MIDI entity at the provided index.
     ///
@@ -44,7 +44,7 @@ public protocol EntityReferable: ObjectReferable {
     /// An array of all MIDI sources in this MIDI entity.
     ///
     /// - Returns: An `Array<MIDIEndpointRef>` of all MIDI sources in this MIDI entity.
-    func sources() -> [EndpointReferable]
+    func sources() -> [SourceReferable]
     
     /// An array of MIDI destinations in this MIDI entity.
     ///
