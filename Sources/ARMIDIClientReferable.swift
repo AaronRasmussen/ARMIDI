@@ -17,5 +17,5 @@ public protocol ClientReferable: ObjectReferable {
     ///   - messageHandler: A `MIDIReadBlock` for parsing the incoming MIDI packet list.
     /// - Throws: `MIDIError`
     /// - Returns: A `PortReferable` MIDI input port.
-    func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> PortReferable
+    func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> InputPortReferable
 }

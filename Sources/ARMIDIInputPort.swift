@@ -16,7 +16,7 @@ import ARMIDIError
 ///   - messageHandler: A `MIDIReadBlock` for parsing the incoming MIDI packet list.
 /// - Throws: `MIDIError`
 /// - Returns: A `PortReferable` MIDI input port.
-public func createInputPort(name: String, client: ClientReferable, messageHandler: @escaping MIDIReadBlock) throws -> PortReferable {
+public func createInputPort(name: String, client: ClientReferable, messageHandler: @escaping MIDIReadBlock) throws -> InputPortReferable {
     
     var port: MIDIPortRef = 0
     let status = MIDIInputPortCreateWithBlock(client.midiRef, name as CFString, &port, messageHandler)
@@ -30,4 +30,4 @@ public func createInputPort(name: String, client: ClientReferable, messageHandle
     return port
 }
 
-extension MIDIPortRef: PortReferable { }
+extension MIDIPortRef: InputPortReferable { }

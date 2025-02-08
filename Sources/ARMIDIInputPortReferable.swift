@@ -8,4 +8,4 @@
 import CoreMIDI
 import ARMIDIError
 
-public protocol PortReferable: ObjectReferable { }
+public protocol InputPortReferable: ObjectReferable { }

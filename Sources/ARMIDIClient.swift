@@ -51,7 +51,7 @@ public func createClient(name: String, notificationHandler: ClientNotificationHa
 
 extension MIDIClientRef: ClientReferable {
     
-    public func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> PortReferable {
+    public func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> InputPortReferable {
         
         return try ARMIDI.createInputPort(name: name, client: self.midiRef, messageHandler: messageHandler)
     }
