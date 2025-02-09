@@ -101,3 +101,71 @@ public func sources() -> [SourceReferable] {
 public func destinations() -> [EndpointReferable] {
     return (0..<numberOfDestinations()).map(destination)
 }
+
+public class SysexMessage {
+    
+    //The completion handler
+    fileprivate var data: [UInt8] = []
+    fileprivate var destination: DestinationReferable
+    fileprivate var handle: ((MIDISysexSendRequest) -> Void)?
+    fileprivate var sendRequest: MIDISysexSendRequest!
+    
+    public init(data: [UInt8], destination: DestinationReferable, completionHandler: ((MIDISysexSendRequest) -> Void)?) {
+        
+        self.data = data
+        self.destination = destination
+        self.handle = completionHandler
+    }
+    
+    public func send() throws {
+        
+        let byteCount: UInt32 = UInt32(self.data.count)
+        
+        self.sendRequest = withUnsafeMutablePointer(to: &data[0]) { dataPointer in
+            
+            
+            return MIDISysexSendRequest(destination: destination.midiRef,
+                                        data: dataPointer,
+                                        bytesToSend: byteCount,
+                                        complete: false,
+                                        reserved: (0,0,0),
+                                        completionProc: sendRequestCompletionWrapper,
+                                        completionRefCon: Unmanaged.passRetained(self).toOpaque())
+        }
+        
+        let status = MIDISendSysex(&self.sendRequest)
+        
+        guard status == 0 else {
+            fatalError()
+        }
+    }
+}
+
+//public func send(sysexData data: [UInt8], to destination: DestinationReferable, completionHandler: ((MIDISysexSendRequest) -> ())?) throws {
+//
+//    var message = SysexMessage(data: data, destination: destination, completionHandler: completionHandler)
+//    
+//    let status = MIDISendSysex(&message.sendRequest)
+//    
+//    guard
+//        status == 0
+//    else {
+//        throw MIDIError(status)
+//    }
+//}
+
+fileprivate func sendRequestCompletionWrapper(_ sysexSendRequestPointer: UnsafeMutablePointer<MIDISysexSendRequest>) -> Void {
+    
+    let sysexSendRequest = sysexSendRequestPointer.pointee
+    
+    guard
+        let unwrappedRawHandler = sysexSendRequest.completionRefCon
+    else {
+        return
+    }
+    
+    let unmanagedHandler = Unmanaged<SysexMessage>.fromOpaque(unwrappedRawHandler)
+    let handler = unmanagedHandler.takeRetainedValue()
+    
+    handler.handle?(sysexSendRequest)
+}
