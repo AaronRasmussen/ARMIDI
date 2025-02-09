@@ -102,27 +102,34 @@ public func destinations() -> [EndpointReferable] {
     return (0..<numberOfDestinations()).map(destination)
 }
 
+/// A system exclusive MIDI message.
+///
+/// `SysexMessage` is used to send a MIDI system exclusive message to a MIDI destination.
+///
+/// An empty `SysexMessage` is created using `SysexMessage()`. The data to send, the destination to send it to, and an optional completion handler are suppled wihen calling the `send(sysexData:to:completionhandler:)` instance method.
 public class SysexMessage {
     
-    //The completion handler
     fileprivate var data: [UInt8] = []
-    fileprivate var destination: DestinationReferable
     fileprivate var handle: ((MIDISysexSendRequest) -> Void)?
     fileprivate var sendRequest: MIDISysexSendRequest!
     
-    public init(data: [UInt8], destination: DestinationReferable, completionHandler: ((MIDISysexSendRequest) -> Void)?) {
-        
-        self.data = data
-        self.destination = destination
-        self.handle = completionHandler
-    }
+    /// Initialize a `SysexMessage`.
+    public init() { }
     
-    public func send() throws {
+    /// Send a `SysexMessage` to a MIDI destination with an optional completion handler.
+    ///
+    /// - Parameters:
+    ///   - sysexData: The data to send. The array should begin with the MIDI system exclusive status byte `0xF0` and end with the `EOX` status byte `0xF7`.
+    ///   - destination: The MIDI destination that will receive the message.
+    ///   - completionHandler: A completion handler that will be called when the transmission is complete.
+    /// - Throws: `MIDIError`
+    public func send(sysexData: [UInt8], to destination: DestinationReferable, completionHandler: ((MIDISysexSendRequest) -> ())?) throws {
         
+        self.data = sysexData
+        self.handle = completionHandler
         let byteCount: UInt32 = UInt32(self.data.count)
         
         self.sendRequest = withUnsafeMutablePointer(to: &data[0]) { dataPointer in
-            
             
             return MIDISysexSendRequest(destination: destination.midiRef,
                                         data: dataPointer,
@@ -133,26 +140,15 @@ public class SysexMessage {
                                         completionRefCon: Unmanaged.passRetained(self).toOpaque())
         }
         
-        let status = MIDISendSysex(&self.sendRequest)
+        let status = MIDISendSysex(&sendRequest)
         
-        guard status == 0 else {
+        guard
+            status == 0
+        else {
             fatalError()
         }
     }
 }
-
-//public func send(sysexData data: [UInt8], to destination: DestinationReferable, completionHandler: ((MIDISysexSendRequest) -> ())?) throws {
-//
-//    var message = SysexMessage(data: data, destination: destination, completionHandler: completionHandler)
-//    
-//    let status = MIDISendSysex(&message.sendRequest)
-//    
-//    guard
-//        status == 0
-//    else {
-//        throw MIDIError(status)
-//    }
-//}
 
 fileprivate func sendRequestCompletionWrapper(_ sysexSendRequestPointer: UnsafeMutablePointer<MIDISysexSendRequest>) -> Void {
     
@@ -168,4 +164,6 @@ fileprivate func sendRequestCompletionWrapper(_ sysexSendRequestPointer: UnsafeM
     let handler = unmanagedHandler.takeRetainedValue()
     
     handler.handle?(sysexSendRequest)
+    handler.sendRequest = nil
+    handler.handle = nil
 }
