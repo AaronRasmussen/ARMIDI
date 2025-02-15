@@ -74,7 +74,7 @@ public func numberOfDestinations() -> Int {
 ///
 /// - Parameter index: The index of the MIDI source to return.
 ///
-/// - Returns: The `MIDIEndpointRef` of the MIDI source in the MIDI system at the provided index.
+/// - Returns: The MIDI source in the MIDI system at the provided index.
 public func source(atIndex index: Int) -> SourceReferable {
     return MIDIGetSource(index)
 }
@@ -83,22 +83,22 @@ public func source(atIndex index: Int) -> SourceReferable {
 ///
 /// - Parameter index: The index of the MIDI destination to return.
 ///
-/// - Returns: The `MIDIEndpointRef` of the MIDI destination in the MIDI system at the provided index.
-public func destination(atIndex index: Int) -> EndpointReferable {
+/// - Returns: The MIDI destination in the MIDI system at the provided index.
+public func destination(atIndex index: Int) -> DestinationReferable {
     return MIDIGetDestination(index)
 }
 
 /// An array of all MIDI sources in the MIDI system.
 ///
-/// - Returns: An `Array<MIDIEndpointRef>` of all MIDI sources in the MIDI system.
+/// - Returns: An array of all MIDI sources in the MIDI system.
 public func sources() -> [SourceReferable] {
     return (0..<numberOfSources()).map(source)
 }
 
 /// An array of all MIDI destinations in the MIDI system.
 ///
-/// - Returns: An `Array<MIDIEndpointRef>` of all MIDI destinations in the MIDI system.
-public func destinations() -> [EndpointReferable] {
+/// - Returns: An array of all MIDI destinations in the MIDI system.
+public func destinations() -> [DestinationReferable] {
     return (0..<numberOfDestinations()).map(destination)
 }
 
