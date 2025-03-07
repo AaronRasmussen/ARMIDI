@@ -8,7 +8,9 @@
 import CoreMIDI
 import ARMIDIError
 
-extension MIDIEndpointRef: EndpointReferable {
+extension MIDIEndpointRef: EndpointReferable { }
+
+extension EndpointReferable {
     
     public func entity() throws -> EntityReferable {
         

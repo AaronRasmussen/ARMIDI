@@ -8,6 +8,7 @@
 import CoreMIDI
 import ARMIDIError
 
+
 extension MIDIObjectRef: ObjectReferable {
     
     public var midiRef: UInt32 {
@@ -15,6 +16,9 @@ extension MIDIObjectRef: ObjectReferable {
             return self
         }
     }
+}
+
+extension ObjectReferable {
     
     public func getStringProperty(_ property: CFString) throws -> String? {
         

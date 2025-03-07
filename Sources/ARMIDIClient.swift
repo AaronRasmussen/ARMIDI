@@ -49,7 +49,9 @@ public func createClient(name: String, notificationHandler: ClientNotificationHa
     return client
 }
 
-extension MIDIClientRef: ClientReferable {
+extension MIDIClientRef: ClientReferable { }
+
+extension ClientReferable {
     
     public func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> InputPortReferable {
         
