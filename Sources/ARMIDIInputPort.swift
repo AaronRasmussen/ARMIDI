@@ -30,7 +30,9 @@ public func createInputPort(name: String, client: ClientReferable, messageHandle
     return port
 }
 
-extension MIDIPortRef: InputPortReferable {
+extension MIDIPortRef: InputPortReferable { }
+
+extension InputPortReferable {
     
     /// Connects this MIDI input port to the given MIDI source.
     ///
