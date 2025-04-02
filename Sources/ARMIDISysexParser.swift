@@ -6,7 +6,6 @@
 //
 
 import CoreMIDI
-import ARMIDI
 import ARMIDIError
 
 /// A parser for system exclusive MIDI messages.

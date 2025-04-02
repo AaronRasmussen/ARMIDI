@@ -7,8 +7,6 @@
 
 import CoreMIDI
 import ARMIDIError
-import ARMIDI
-
 
 /// A system exclusive MIDI message.
 ///
