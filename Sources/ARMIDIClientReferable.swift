@@ -19,3 +19,14 @@ public protocol ClientReferable: ObjectReferable {
     /// - Returns: A `PortReferable` MIDI input port.
     func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> InputPortReferable
 }
+
+extension ClientReferable {
+    
+    public func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> InputPortReferable {
+        
+        return try ARMIDI.createInputPort(
+            name: name,
+            client: self.midiRef,
+            messageHandler: messageHandler)
+    }
+}
