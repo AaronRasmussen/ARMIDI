@@ -15,12 +15,12 @@ public protocol EndpointReferable: ObjectReferable {
     /// - Throws: `MIDIError`
     ///
     /// - Returns: A `MIDIEntityRef` for this MIDI endpoint's parent MIDI entity.
-    func entity() throws -> EntityReferable
+    func entity() throws -> any EntityReferable
 }
 
 extension EndpointReferable {
     
-    public func entity() throws -> EntityReferable {
+    public func entity() throws -> any EntityReferable {
         
         var entity: MIDIEntityRef = 0
         let status = MIDIEndpointGetEntity(self.midiRef, &entity)

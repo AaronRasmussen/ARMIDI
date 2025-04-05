@@ -7,12 +7,7 @@
 
 import CoreMIDI
 
-extension UInt32: @retroactive Identifiable {
-    public var id: UInt32 {
-        return self
-    }
-}
-
+extension UInt32: @retroactive Identifiable {}
 extension MIDIObjectRef: ObjectReferable {
     
     public var midiRef: UInt32 {

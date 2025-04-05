@@ -15,7 +15,7 @@ public protocol EntityReferable: ObjectReferable {
     /// - Throws: `MIDIError`
     ///
     /// - Returns: A `MIDIDeviceRef` for this MIDI entity's parent MIDI device.
-    func device() throws -> DeviceReferable
+    func device() throws -> any DeviceReferable
     
     /// The number of MIDI sources in this MIDI entity.
     ///
@@ -32,29 +32,29 @@ public protocol EntityReferable: ObjectReferable {
     /// - Parameter index: The index of the MIDI source to return.
     ///
     /// - Returns: The `MIDIEndpointRef` of the MIDI source in the MIDI entity at the provided index.
-    func source(atIndex index: Int) -> SourceReferable
+    func source(atIndex index: Int) -> any SourceReferable
     
     /// The MIDI destination in this MIDI entity at the provided index.
     ///
     /// - Parameter index: The index of the MIDI destination to return.
     ///
     /// - Returns: The `MIDIEndpointRef` of the MIDI destination in this MIDI entity at the provided index.
-    func destination(atIndex index: Int) -> DestinationReferable
+    func destination(atIndex index: Int) -> any DestinationReferable
     
     /// An array of all MIDI sources in this MIDI entity.
     ///
     /// - Returns: An `Array<MIDIEndpointRef>` of all MIDI sources in this MIDI entity.
-    func sources() -> [SourceReferable]
+    func sources() -> [any SourceReferable]
     
     /// An array of MIDI destinations in this MIDI entity.
     ///
     /// - Returns: An `Array<MIDIEndpointRef>` of all MIDI destinations in this MIDI entity.
-    func destinations() -> [DestinationReferable]
+    func destinations() -> [any DestinationReferable]
 }
 
 extension EntityReferable {
     
-    public func device() throws -> DeviceReferable {
+    public func device() throws -> any DeviceReferable {
         
         var device: MIDIDeviceRef = 0
         let status = MIDIEntityGetDevice(self.midiRef, &device)
@@ -76,19 +76,19 @@ extension EntityReferable {
         return MIDIEntityGetNumberOfDestinations(self.midiRef) as Int
     }
     
-    public func source(atIndex index: Int) -> SourceReferable {
+    public func source(atIndex index: Int) -> any SourceReferable {
         return MIDIEntityGetSource(self.midiRef, index)
     }
     
-    public func destination(atIndex index: Int) -> DestinationReferable {
+    public func destination(atIndex index: Int) -> any DestinationReferable {
         return MIDIEntityGetDestination(self.midiRef, index)
     }
     
-    public func sources() -> [SourceReferable] {
+    public func sources() -> [any SourceReferable] {
         return (0..<self.numberOfSources()).map(self.source)
     }
     
-    public func destinations() -> [DestinationReferable] {
+    public func destinations() -> [any DestinationReferable] {
         return (0..<self.numberOfDestinations()).map(self.destination)
     }
 }

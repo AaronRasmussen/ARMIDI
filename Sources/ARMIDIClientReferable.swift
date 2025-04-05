@@ -17,16 +17,27 @@ public protocol ClientReferable: ObjectReferable {
     ///   - messageHandler: A `MIDIReadBlock` for parsing the incoming MIDI packet list.
     /// - Throws: `MIDIError`
     /// - Returns: A `PortReferable` MIDI input port.
-    func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> InputPortReferable
+    func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> any InputPortReferable
 }
 
 extension ClientReferable {
     
-    public func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> InputPortReferable {
+    public func createInputPort(name: String, messageHandler: @escaping MIDIReadBlock) throws -> any InputPortReferable {
         
-        return try ARMIDI.createInputPort(
-            name: name,
-            client: self.midiRef,
-            messageHandler: messageHandler)
+        var inputPort: MIDIPortRef = 0
+        
+        let status = MIDIInputPortCreateWithBlock(
+            self.midiRef,
+            name as CFString,
+            &inputPort,
+            messageHandler)
+        
+        guard
+            status == 0
+        else {
+            throw MIDIError(status)
+        }
+        
+        return inputPort
     }
 }

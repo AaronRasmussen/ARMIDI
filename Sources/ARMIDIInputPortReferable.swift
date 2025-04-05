@@ -14,7 +14,7 @@ public protocol InputPortReferable: ObjectReferable {
     ///
     /// - Parameter source: The MIDI source to connect to the MIDI input port.
     /// - Throws: `MIDIError`
-    func connect(toSource source: SourceReferable) throws
+    func connect(toSource source: any SourceReferable) throws
 }
 
 extension InputPortReferable {

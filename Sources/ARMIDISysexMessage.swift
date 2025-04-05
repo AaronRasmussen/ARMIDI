@@ -29,7 +29,7 @@ public class SysexMessage {
     ///   - destination: The MIDI destination that will receive the message.
     ///   - completionHandler: A completion handler that will be called when the transmission is complete.
     /// - Throws: `MIDIError`
-    public func send(_ data: [UInt8], to destination: DestinationReferable, completionHandler handler: ((MIDISysexSendRequest) -> Void)?) throws {
+    public func send(_ data: [UInt8], to destination: any DestinationReferable, completionHandler handler: ((MIDISysexSendRequest) -> Void)?) throws {
         
         let count = data.count
 

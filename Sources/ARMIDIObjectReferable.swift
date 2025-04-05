@@ -9,7 +9,9 @@ import CoreMIDI
 import ARMIDIError
 
 /// A protocol for MIDI objects.
-public protocol ObjectReferable {
+public protocol ObjectReferable: Identifiable {
+    
+    var id: UInt32 { get }
     
     /// The `UInt32` value used to refer to the MIDI object.
     var midiRef: UInt32 { get }
@@ -69,3 +71,8 @@ extension ObjectReferable {
     }
 }
 
+extension ObjectReferable {
+    public var id: UInt32 {
+        return self.midiRef
+    }
+}
