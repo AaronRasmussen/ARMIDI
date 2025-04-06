@@ -18,17 +18,10 @@ public class SysexParser {
         case receiving
     }
     
-    private let handle: ([UInt8]) -> Void
+    private var handle: (([UInt8]) -> Void)?
     
     private var state: State = .waiting
     private var buffer: [UInt8] = []
-    
-    /// Initialize a parser.
-    ///
-    /// - Parameter sysexHandler: A handler for processing the system exclusive MIDI message.
-    public init(sysexHandler: @escaping ([UInt8]) -> Void) {
-        self.handle = sysexHandler
-    }
     
     /// A method for handling data to be parsed.
     ///
@@ -53,7 +46,7 @@ public class SysexParser {
                     self.buffer = []
                     
                 case kSystemCommonEOX:
-                    self.handle(buffer)
+                    self.handle?(buffer)
                     self.state = .waiting
                     self.buffer = []
                     
@@ -69,5 +62,9 @@ public class SysexParser {
                 }
             }
         }
+    }
+    
+    public func setParserHandler(_ handler: @escaping ([UInt8]) -> Void) {
+        self.handle = handler
     }
 }
