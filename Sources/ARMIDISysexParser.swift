@@ -23,6 +23,8 @@ public class SysexParser {
     private var state: State = .waiting
     private var buffer: [UInt8] = []
     
+    public init() { }
+    
     /// A method for handling data to be parsed.
     ///
     /// - Parameter data: An array of bytes to be parsed.`
