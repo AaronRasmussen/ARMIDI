@@ -27,10 +27,10 @@ public class SysexParser {
     
     /// A method for handling data to be parsed.
     ///
-    /// - Parameter data: An array of bytes to be parsed.`
-    public func parse(_ data: [UInt8]) {
+    /// - Parameter bytes: An array of bytes to be parsed.`
+    public func parse(_ bytes: [UInt8]) {
         
-        data.forEach { byte in
+        bytes.forEach { byte in
             
             switch self.state {
                 
@@ -66,6 +66,11 @@ public class SysexParser {
         }
     }
     
+    /// Sets the parser handler.
+    ///
+    /// The parser handler is called when the parser has received a complete Sysex message.
+    ///
+    /// - Parameter handler: A closure that takes an array of `UInt8` bytes and returns `Void`.
     public func setParserHandler(_ handler: @escaping ([UInt8]) -> Void) {
         self.handle = handler
     }
