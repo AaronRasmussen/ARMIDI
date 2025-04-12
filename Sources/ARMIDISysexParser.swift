@@ -25,6 +25,10 @@ public class SysexParser {
     
     public init() { }
     
+    public init(parserHandler: @escaping ([UInt8]) -> Void) {
+        self.handle = parserHandler
+    }
+    
     /// A method for handling data to be parsed.
     ///
     /// - Parameter bytes: An array of bytes to be parsed.`
