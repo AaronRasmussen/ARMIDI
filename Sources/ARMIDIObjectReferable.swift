@@ -37,6 +37,8 @@ public protocol ObjectReferable: Identifiable {
 
 extension ObjectReferable {
     
+    public var id: UInt32 { midiRef }
+    
     public func getStringProperty(_ property: CFString) throws -> String? {
         
         var stringProperty: Unmanaged<CFString>? = nil
@@ -45,7 +47,9 @@ extension ObjectReferable {
         
         guard
             status != kMIDIUnknownProperty
-        else { return nil }
+        else {
+            return nil
+        }
         
         guard
             status == 0
@@ -68,11 +72,5 @@ extension ObjectReferable {
         }
         
         return integer
-    }
-}
-
-extension ObjectReferable {
-    public var id: UInt32 {
-        return self.midiRef
     }
 }
