@@ -7,6 +7,7 @@
 
 import CoreMIDI
 import ARMIDIError
+import Foundation
 
 /// A system exclusive MIDI message.
 ///
@@ -35,16 +36,24 @@ public class SysexMessage {
 
         self.data = data
         self.handle = handler
-        self.sendRequest = withUnsafePointer(to: &self.data[0]) { bytes in
-            MIDISysexSendRequest(
+        self.sendRequest = self.data.withUnsafeBufferPointer() { ptr -> MIDISysexSendRequest in
+            
+            guard
+                let baseAddress = ptr.baseAddress
+            else {
+                fatalError("Unable to obtain base address.")
+            }
+            
+            return MIDISysexSendRequest(
                 destination: destination.midiRef,
-                data: bytes,
+                data: baseAddress,
                 bytesToSend: UInt32(count),
                 complete: false,
                 reserved: (0,0,0),
                 completionProc: sendRequestCompletionWrapper,
                 completionRefCon: Unmanaged.passRetained(self).toOpaque()
             )
+            
         }
         
         let status = MIDISendSysex(&self.sendRequest)
