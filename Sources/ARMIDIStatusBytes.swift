@@ -156,118 +156,118 @@ public let kSystemRealTimeSystemReset: UInt8        = 0xFF  // 0b11111111
 extension UInt8 {
     
     public var isStatusByte: Bool {
-        return (self & 0x80) != 0
+        (self & 0x80) != 0
     }
     
     public var isChannelStatusByte: Bool {
-        return self.isStatusByte && (self <= 0xEF)
+        isStatusByte && (self <= 0xEF)
     }
     
     public var isChannel01StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x00)
+        isChannelStatusByte && (self & 0x0F == 0x00)
     }
     
     public var isChannel02StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x01)
+        isChannelStatusByte && (self & 0x0F == 0x01)
     }
     
     public var isChannel03StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x02)
+        isChannelStatusByte && (self & 0x0F == 0x02)
     }
     
     public var isChannel04StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x03)
+        isChannelStatusByte && (self & 0x0F == 0x03)
     }
     
     public var isChannel05StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x04)
+        isChannelStatusByte && (self & 0x0F == 0x04)
     }
     
     public var isChannel06StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x05)
+        isChannelStatusByte && (self & 0x0F == 0x05)
     }
     
     public var isChannel07StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x06)
+        isChannelStatusByte && (self & 0x0F == 0x06)
     }
     
     public var isChannel08StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x07)
+        isChannelStatusByte && (self & 0x0F == 0x07)
     }
     
     public var isChannel09StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x08)
+        isChannelStatusByte && (self & 0x0F == 0x08)
     }
     
     public var isChannel10StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x09)
+        isChannelStatusByte && (self & 0x0F == 0x09)
     }
     
     public var isChannel11StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x0A)
+        isChannelStatusByte && (self & 0x0F == 0x0A)
     }
     
     public var isChannel12StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x0B)
+        isChannelStatusByte && (self & 0x0F == 0x0B)
     }
     
     public var isChannel13StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x0C)
+        isChannelStatusByte && (self & 0x0F == 0x0C)
     }
     
     public var isChannel14StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x0D)
+        isChannelStatusByte && (self & 0x0F == 0x0D)
     }
     
     public var isChannel15StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x0E)
+        isChannelStatusByte && (self & 0x0F == 0x0E)
     }
     
     public var isChannel16StatusByte: Bool {
-        return self.isChannelStatusByte && (self & 0x0F == 0x0F)
+        isChannelStatusByte && (self & 0x0F == 0x0F)
     }
     
     public var isNoteOffStatusByte: Bool {
-        return (self >= 0x80) && (self <= 0x8F)
+         (self >= 0x80) && (self <= 0x8F)
     }
     
     public var isNoteOnStatusByte: Bool {
-        return (self >= 0x90) && (self <= 0x9F)
+         (self >= 0x90) && (self <= 0x9F)
     }
     
     public var isPolyKeyPressureStatusByte: Bool {
-        return (self >= 0xA0) && (self <= 0xAF)
+         (self >= 0xA0) && (self <= 0xAF)
     }
     
     public var isControlChangeStatusByte: Bool {
-        return (self >= 0xB0) && (self <= 0xBF)
+         (self >= 0xB0) && (self <= 0xBF)
     }
     
     public var isProgramChangeStatusByte: Bool {
-        return (self >= 0xC0) && (self <= 0xCF)
+         (self >= 0xC0) && (self <= 0xCF)
     }
     
     public var isChannelPressureStatusByte: Bool {
-        return (self >= 0xD0) && (self <= 0xDF)
+         (self >= 0xD0) && (self <= 0xDF)
     }
     
     public var isPitchBendStatusByte: Bool {
-        return (self >= 0xE0) && (self <= 0xEF)
+         (self >= 0xE0) && (self <= 0xEF)
     }
     
     public var isSystemStatusByte: Bool {
-        return self.isStatusByte && (self >= 0xF0)
+        isStatusByte && (self >= 0xF0)
     }
     
     public var isUndefinedStatusByte: Bool {
-        return (self != 0xF4) && (self != 0xF5) && (self != 0xF9) && (self != 0xFD)
+         (self != 0xF4) && (self != 0xF5) && (self != 0xF9) && (self != 0xFD)
     }
     
     public var isSystemCommonStatusByte: Bool {
-        return (self >= 0xF1) && (self <= 0xF7) && !self.isUndefinedStatusByte
+         (self >= 0xF1) && (self <= 0xF7) && !self.isUndefinedStatusByte
     }
     
     public var isSystemRealTimeStatusByte: Bool {
-        return (self >= 0xF8) && (self <= 0xFF) && !self.isUndefinedStatusByte
+         (self >= 0xF8) && (self <= 0xFF) && !self.isUndefinedStatusByte
     }
 }
