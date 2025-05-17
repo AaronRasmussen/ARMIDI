@@ -5,12 +5,13 @@
 //  Created by Aaron Rasmussen on 4/5/25.
 //
 
+import CoreMIDI
+
 extension UInt32: ObjectReferable {
     
-    public var midiRef: UInt32 {
-        get {
-            return self
-        }
+    /// The `MIDIObjectRef` that is used to reference this MIDI object.
+    public var midiRef: MIDIObjectRef {
+        get { self }
     }
 }
 
