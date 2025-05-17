@@ -10,7 +10,7 @@ import ARMIDIError
 
 /// A parser for system exclusive MIDI messages.
 ///
-/// The parser looks only for system exclusive MIDI messages. Messages will be handled by the `sysexHandler` supplied when the parser is initialized.
+/// The parser looks only for system exclusive MIDI messages. Messages will be handled by the `parserHandler`closure supplied when the parser is initialized.
 public class SysexParser {
     
     private enum State {
@@ -18,13 +18,21 @@ public class SysexParser {
         case receiving
     }
     
-    private var handle: (([UInt8]) -> Void)?
+    private var handle: (([UInt8]) -> Void)? = nil
     
     private var state: State = .waiting
     private var buffer: [UInt8] = []
     
+    /// Initialize a `SysexParser` without a handler closure.
+    ///
+    /// A parser handler will have to be supplied using the `setSysexParser(_:)` method before the parser can be used.
     public init() { }
     
+    /// Initizlize a `SysexParser` using the supplied `parserHandler` closure.
+    ///
+    /// The `parserHandler` closure is called when the parser has received a complete system exclusive
+    /// MIDI message. The closure takes an array of bytes excluding the initial system exclusive data byte
+    /// and the `EOX` byte.
     public init(parserHandler: @escaping ([UInt8]) -> Void) {
         self.handle = parserHandler
     }
@@ -34,14 +42,20 @@ public class SysexParser {
     /// - Parameter bytes: An array of bytes to be parsed.`
     public func parse(_ bytes: [UInt8]) {
         
+        guard
+            let handle = handle
+        else {
+            fatalError()
+        }
+        
         bytes.forEach { byte in
             
-            switch self.state {
+            switch state {
                 
             case .waiting:
                 
                 if byte == kSystemExclusive {
-                    self.state = .receiving
+                    state = .receiving
                 }
                 
             case .receiving:
@@ -49,22 +63,22 @@ public class SysexParser {
                 switch byte {
                     
                 case kSystemExclusive:
-                    self.buffer = []
+                    buffer = []
                     
                 case kSystemCommonEOX:
-                    self.handle?(buffer)
-                    self.state = .waiting
-                    self.buffer = []
+                    handle(buffer)
+                    state = .waiting
+                    buffer = []
                     
                 case let b where !b.isStatusByte:
-                    self.buffer.append(b)
+                    buffer.append(b)
                     
                 case let b where b.isSystemRealTimeStatusByte:
                     break
                     
                 default:
-                    self.state = .waiting
-                    self.buffer = []
+                    state = .waiting
+                    buffer = []
                 }
             }
         }
@@ -76,6 +90,6 @@ public class SysexParser {
     ///
     /// - Parameter handler: A closure that takes an array of `UInt8` bytes and returns `Void`.
     public func setParserHandler(_ handler: @escaping ([UInt8]) -> Void) {
-        self.handle = handler
+        handle = handler
     }
 }
