@@ -10,9 +10,7 @@ import CoreMIDI
 extension UInt32: ObjectReferable {
     
     /// The `MIDIObjectRef` that is used to reference this MIDI object.
-    public var midiRef: MIDIObjectRef {
-        get { self }
-    }
+    public var midiRef: MIDIObjectRef { self }
 }
 
 extension UInt32: DeviceReferable { }
